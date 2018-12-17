@@ -8,7 +8,7 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
     <!-- BootStrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- jquery -->
     <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -16,12 +16,41 @@
   crossorigin="anonymous"></script>
   <!-- Our styles and script -->
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
-    <script src="assets/javascript/main.js"></script>
+    
 </head>
 <body>
 
+<div class="Jumbotron">
+    <h1 class="text-center">Blah.</h1>
+</div>
 
+<div class="card" id="musicInfo">
+    <div class="card-header">DataMuse API Return Data</div>
+    <div class="card-text">
+            <form>
+                    <div class="form-group">
+                            <label for="search">Search</label>
+                            <input type="search" class="form-control" id="wordSearch" aria-describedby="searchHelp" placeholder="Search by word or phrase">
+                            <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
+                          </div>
+                          <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+            </form>
+        Placeholder text for data.
+        <ul  id="results">
+            
+        </ul>
+        
+    </div>
+
+</div>
+<div class="card" id="apiInfo">
+        <div class="card-header">other API Return Data</div>
+        <div class="card-text">
+            Placeholder text for data.
+        </div>
     
-    
+    </div>
+
+    <script src="assets/javascript/main.js"></script>
 </body>
 </html>
