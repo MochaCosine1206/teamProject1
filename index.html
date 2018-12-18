@@ -14,8 +14,11 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+  <!--fontawesome-->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
   <!-- Our styles and script -->
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+    <script src="assets/javascript/main.js"></script>
     
 </head>
 <body>
@@ -23,34 +26,47 @@
 <div class="Jumbotron">
     <h1 class="text-center">Blah.</h1>
 </div>
-
+<div class="container">
 <div class="card" id="musicInfo">
-    <div class="card-header">DataMuse API Return Data</div>
+    <div class="card-header bg-primary text-white">DataMuse API Return Data</div>
     <div class="card-text">
             <form>
                     <div class="form-group">
                             <label for="search">Search</label>
                             <input type="search" class="form-control" id="wordSearch" aria-describedby="searchHelp" placeholder="Search by word or phrase">
                             <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
+                            <datalist id="autoComplete"></datalist>
                           </div>
                           <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
             </form>
         Placeholder text for data.
         <ul  id="results">
-            
+
         </ul>
         
     </div>
 
 </div>
+<br>
 <div class="card" id="apiInfo">
-        <div class="card-header">other API Return Data</div>
-        <div class="card-text">
+        <div class="card-header bg-info text-white">Geolocation, Cross Street, and Closest Brewery (Brewery Function is too limited to use)</div>
+        <form>
+        <div class="form-group">
+                <label for="search">Current Location</label>
+                <input type="search" class="form-control" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
+                <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
+              </div>
+              <button type="submit" class="btn btn-primary" id="addressButton">Submit</button>
+              <button type="submit" class="btn btn-info" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
+            </form>
+            <div class="card-text" id="map-loc">
+                    Placeholder text for data.
+                </div>
+        <div class="card-text" id="locText">
             Placeholder text for data.
         </div>
     
     </div>
-
-    <script src="assets/javascript/main.js"></script>
+</div>
 </body>
 </html>
