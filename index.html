@@ -1,72 +1,73 @@
 <!DOCTYPE <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Tipsy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
-    <!-- BootStrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- jquery -->
-    <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-  <!--fontawesome-->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-  <!-- Our styles and script -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!--fontawesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
+        crossorigin="anonymous">
+    <!-- materialize icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Our styles and script -->
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <script src="assets/javascript/main.js"></script>
-    
+
 </head>
+
 <body>
-
-<div class="Jumbotron">
-    <h1 class="text-center">Blah.</h1>
-</div>
-<div class="container">
-<div class="card" id="musicInfo">
-    <div class="card-header bg-primary text-white">DataMuse API Return Data</div>
-    <div class="card-text">
-            <form>
-                    <div class="form-group">
-                            <label for="search">Search</label>
-                            <input type="search" class="form-control" id="wordSearch" aria-describedby="searchHelp" placeholder="Search by word or phrase to get closest meaning word">
-                            <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
-                            <datalist id="autoComplete"></datalist>
-                          </div>
-                          <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-            </form>
-        Placeholder text for data.
-        <ul  id="results">
-
-        </ul>
-        
-    </div>
-
-</div>
-<br>
-<div class="card" id="apiInfo">
-        <div class="card-header bg-info text-white">Geolocation, Cross Street, and Closest Brewery (Brewery Function is too limited to use)</div>
-        <form>
-        <div class="form-group">
-                <label for="search">Current Location</label>
-                <input type="search" class="form-control" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
-                <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
-              </div>
-              <button type="submit" class="btn btn-primary" id="addressButton">Submit</button>
-              <button type="submit" class="btn btn-info" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
-            </form>
-            <div class="card-text" id="map-loc">
-                    Placeholder text for data.
-                </div>
-        <div class="card-text" id="locText">
-            Placeholder text for data.
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
         </div>
-    
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card">
+                    <span class="card-title">Search Box</span>
+                    <div class="card-content">
+                            <div class="row">
+                                    <div class="input-field col s6">
+                                      <input id="cocktailName" type="text" class="validate">
+                                      <label class="active" for="cocktailName">Search By Cocktail Name</label>
+                                      <div class="btn waves-effect waves-light" id="searchButton">Search</div>
+                                    </div>
+                                  </div>
+                                  <br>
+                            <select class="browser-default" id="categorySelect">
+                                    <option value="notSelected" disabled selected>Search by Category</option>
+                            </select>        
+                            <br>
+                        <select class="browser-default" id="ingredientSelect">
+                            <option value="notSelected" disabled selected>Search by Ingredient</option>
+                        </select>
+                        <br>
+                        <select class="browser-default" id="glassSelect">
+                            <option value="notSelected" disabled selected>Search by Glass Type</option>
+                        </select>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
 </body>
+
 </html>
