@@ -13,10 +13,13 @@ var database = firebase.database();
 //datamuse variables
 var search;
 var textValue;
-var latlon;
-var img_url;
+
+//google maps
 var lat;
 var lng;
+var latlon;
+var img_url;
+
 
 
 $(document).ready(function () {
