@@ -29,70 +29,127 @@
 </head>
 <body>
 
-<!-- <div class="Jumbotron">
-    <h1 class="text-center">Cocktailpedia</h1>
-</div> -->
-
-<nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Logo</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="index.html">Home</a></li>  
-        <li><a href="favorites.html">Favorites</a></li>
-        <li><a href="shopping.html">Shopping List</a></li>
-      </ul>
-    </div>
-</nav>
-
-<div class="row">
-    <div class="col s3">
-
-    </div>
-    <div class="col s9">
-
-    </div>
-</div>
-<!-- <div class="container">
-<div class="card" id="musicInfo">
-    <div class="card-header bg-primary text-white">DataMuse API Return Data</div>
-    <div class="card-text">
-            <form>
-                    <div class="form-group">
-                            <label for="search">Search</label>
-                            <input type="search" class="form-control" id="wordSearch" aria-describedby="searchHelp" placeholder="Search by word or phrase to get closest meaning word">
-                            <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
-                            <datalist id="autoComplete"></datalist>
-                          </div>
-                          <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-            </form>
-        Placeholder text for data.
-        <ul  id="results">
-
-        </ul>
-        
-    </div>
-
-</div> -->
-<!-- <br>
-<div class="card" id="apiInfo">
-        <div class="card-header bg-info text-white">Geolocation, Cross Street, and Closest Brewery (Brewery Function is too limited to use)</div>
-        <form>
-        <div class="form-group">
-                <label for="search">Current Location</label>
-                <input type="search" class="form-control" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
-                <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
-              </div>
-              <button type="submit" class="btn btn-primary" id="addressButton">Submit</button>
-              <button type="submit" class="btn btn-info" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
-            </form>
-            <div class="card-text" id="map-loc">
-                    Placeholder text for data.
+        <!--search button-->
+        <nav>
+            <div class="nav-wrapper">
+                <div class="search">
                 </div>
-        <div class="card-text" id="locText">
-            Placeholder text for data.
-        </div>
+                <form>
+                    <div class="input-field">
+                        <input id="search" type="search" required>
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">cancel</i>
+                    </div>
+                </form>
+            </div>
+        </nav>
     
+        <div id="links">
+                <ul>
+                    <br>
+                    <li><a class="btn-floating red lighten-1"><i class="material-icons">home</i></a></li>
+                    <br>
+                    <li><a class="btn-floating red lighten-1"><i class="material-icons">star</i></a></li>
+                    <br>
+                    <li><a class="btn-floating red lighten-1"><i class="material-icons">shopping_basket</i></a></li>
+                </ul>
+            </div>
+        
+        <!--Inital website intro-->
+        <!-- <div class="jumbotron jumbotron-fluid">
+            <div class="container justify-content-center">
+                <h1 class="display-4">Down The Hatch.</h1>
+                <p class="lead">Application developed by five gifted developers that allows the
+                    user to search cocktail recipes, ideas, ingredients, and images using a
+                    drink encyclopedia api. Lets get started by searching a Drink.. </p>
+                <p> To take full advantage of app sign up for free and save all of your
+                    favorite drinks to your own library. :)</p>
+            </div>
+        </div>
+        </div> -->
+    
+    
+    
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+    
+        <!-- Modal Structure -->
+        <!-- <div class="row">
+         <div class="col s12 m4 l2"><p>Sign Up.</p></div>
+        <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                    <div ID =sign-up-form>
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input placeholder="Placeholder" id="first_name" type="text" class="validate">
+                                        <label for="first_name">First Name</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input id="last_name" type="text" class="validate">
+                                        <label for="last_name">Last Name</label>
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="password" type="password" class="validate">
+                                        <label for="password">Password</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="email" type="email" class="validate">
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                             </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+            </div>
+        </div>
+        </div> -->
+    
+    <!-- Structure to display search results -->
+    
+<div class="container">
+    <div class="row">
+        <div class="col s12 m7">
+            <h2 class="header">Name of Drink</h2>
+            <div class="card horizontal">
+                <div class="card-image">
+                    <img src="https://lorempixel.com/100/190/nature/6">
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <p>This is where the drink info contents will go.</p>
+                    </div>
+                    <div class="card-action">
+                        <i class="material-icons" id="favorite">star</i>
+                        <i class="material-icons" id="shop">shopping_basket</i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div> -->
-</body>
+</div>    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!--Jquery-->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+       <!-- Compiled and minified JavaScript -->
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+       <script>
+       $(document).ready(function(){
+    $('#modal1').modal();
+       });
+       </script>
+    
+    </body>
 </html>
