@@ -9,7 +9,7 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
-
+var sectionMap;
 
 
 //get ingredient and category items on page load and list them in selection boxes
@@ -66,21 +66,10 @@ $(document).ready(function () {
 
 
 
-    var alcoholic = "https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list";
-
-    $.ajax({
-        url: alcoholic,
-        method: "GET"
-    }).then(function (response) {
-    })
 
     cocktailSearch();
 
-
-
-
     function cocktailSearch() {
-        //get wikipedia cocktails list
         $.ajax({
             url: "https://cors-escape.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&format=json&titles=List_of_IBA_official_cocktails&prop=links&pllimit=max",
             method: "GET"
@@ -89,34 +78,10 @@ $(document).ready(function () {
             console.log(response.query.pages[8702622].links[0].title);
             var wikiArticleArray = response.query.pages[8702622].links.map(function (titles) {
                 wikiLinks = titles.title
-                console.log(titles.title);
+                // console.log(titles.title);
                 return wikiLinks;
             })
-            console.log(wikiArticleArray);
-
-        
-            var sectionMap
-            sectionMap = wikiArticleArray.map(function(summaries) {
-                console.log(summaries);
-                var summaries = summaries;
-                var wikidrinkNameFormatted = summaries.split(" ").join("_");
-                var wikiSummaries = "https://en.wikipedia.org/api/rest_v1/page/summary/" + wikidrinkNameFormatted;
-
-                $.ajax({
-                    url: wikiSummaries,
-                    method: "GET"
-                }).then(function (data) {
-                    extracts = data.extract
-                    console.log(data.extract);
-                    return extracts;
-                })
-                
-            });
-            console.log(sectionMap);
-            //within the first Ajax for wikipedia articles
-
-        });
-
+            // console.log(wikiArticleArray);
 
             $("#searchButton").on("click", function () {
                 var value = $("#cocktailName").val().trim();
@@ -130,18 +95,11 @@ $(document).ready(function () {
                     url: cocktailURL,
                     method: "GET"
                 }).then(function (response) {
-                    console.log(response.drinks[0]);
+
+
+
 
                     //Map Arrays for URL, Drink Names, Images, Instructions--------------------
-
-                    var drinksWikiUrl = response.drinks.map(function (drinkNames) {
-                        var drinkName = drinkNames.strDrink;
-                        var drinkNameFormatted = drinkName.split(" ").join("_");
-                        var wikiURL = "https://en.wikipedia.org/api/rest_v1/page/summary/" + drinkNameFormatted;
-                        return wikiURL;
-
-                    });
-                    console.log(drinksWikiUrl);
 
                     var drinkNamesArray = response.drinks.map(function (drinkNames) {
                         var drinkName = drinkNames.strDrink;
@@ -149,49 +107,36 @@ $(document).ready(function () {
                     })
                     console.log(drinkNamesArray);
 
-                    var drinkImgArray = response.drinks.map(function (drinkImg) {
-                        var drinkPic = drinkImg.strDrinkThumb;
-                        return drinkPic;
-                    })
-                    console.log(drinkImgArray);
-
-                    var drinkInstructionsArray = response.drinks.map(function (drinkInstruct) {
-                        var drinkInstructions = drinkInstruct.strInstructions;
-                        return drinkInstructions;
-                    })
-                    console.log(drinkInstructionsArray);
-
-                    // var drinkIngredients = Object.keys(response.drinks).filter(function(key){
-                    //     if(response.drinks[key].includes("Ingredient")){
-                    //         return response.drinks[key]; 
-                    //     }                   
-                    // }).map(function(key){
-                    //     return response.drinks[key];
-                    // });
-
-                    // console.log(drinkIngredients);
+                    var drinksWikiUrl = response.drinks.map(function (drinkNames) {
+                        var drinkName = drinkNames.strDrink;
+                        var drinkNameFormatted = drinkName.split(" ").join("_");
+                        var wikiURL = "https://en.wikipedia.org/api/rest_v1/page/summary/" + drinkNameFormatted;
+                        return wikiURL;
 
 
-                    // var wikiSnippetMap = drinksWikiUrl.map(function (snippetURL) {
-                    //     $.ajax({
-                    //         url: snippetURL,
-                    //         method: "GET",
-                    //         success: result,
-                    //     });
-                    //     var wikiResult;
-                    //     console.log(wikiResult);
-                    //     function result(data){
-                    //         console.log(data.extract);
-                    //         // wikiResult = data[2][0];
-                    //         // console.log(wikiResult)
-                    //     }
-                    //     return wikiResult;
-                    // });
 
-                    // console.log(wikiSnippetMap);
+
+                    });
+                    console.log(drinksWikiUrl);
+
+
+                    
+
 
 
                     for (var i = 0; i < response.drinks.length; i++) {
+
+                        if (wikiArticleArray.includes(response.drinks[i].strDrink)) {
+
+                            $.ajax({
+                                url: drinksWikiUrl,
+                                method: "get",
+                            }).then(function(data){
+                                console.log(data.extract);
+                                var extractDiv = $("<p>").text(data.extract);
+                            });
+                            
+                        }
 
                         var cocktailCard = $("<div>").addClass("card");
                         var cocktailCardImageDiv = $("<div>").addClass("card-image")
@@ -305,5 +250,6 @@ $(document).ready(function () {
                 });
 
             });
-        }
+        });
+    }
 });
