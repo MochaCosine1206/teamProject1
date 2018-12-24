@@ -9,247 +9,170 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
-var sectionMap;
+var latlon;
+var city;
+var cityPlaceId;
+var state;
+var statePlaceId;
+var country;
+var cityPlaceId;
+var formattedCityStateName;
+var lat;
+var lng;
 
-
-//get ingredient and category items on page load and list them in selection boxes
+//Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
 
 $(document).ready(function () {
+    $("#addressButton").on("click", function (event) {
+        event.preventDefault();
+
+        addressSearch();
+        $("#locationSearch").val("");
 
 
+    });
 
-    //establish lists
-    var categories = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
+    $("#locationButton").on("click", function (event) {
 
-    $.ajax({
-        url: categories,
-        method: "GET"
-    }).then(function (response) {
+        event.preventDefault();
 
-        for (var i = 0; i < response.drinks.length; i++) {
-            var option = $("<option>").val(response.drinks[i].strCategory).text(response.drinks[i].strCategory)
-            $("#categorySelect").append(option);
+        getLocation();
+
+    });
+
+    function getLocation() {
+        console.log(navigator.geolocation);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            $("#map-loc").text("Geolocation is not supported by this browser");
         }
-    })
-
-    var ingredients = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list";
-    $.ajax({
-        url: ingredients,
-        method: "GET"
-    }).then(function (response) {
-        //change data into usable autocomplete object
-        for (var i = 0; i < response.drinks.length; i++) {
-            var option = $("<option>").val(response.drinks[i].strIngredient1).text(response.drinks[i].strIngredient1)
-            $("#ingredientSelect").append(option);
-        }
+    }
 
 
+    //This function gets a picture of the map where you are and adds it to the HTML
+    function showPosition(position) {
+        console.log(position);
+        latlon = position.coords.latitude + "," + position.coords.longitude;
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+        console.log(typeof latlon)
+        console.log(typeof position.coords.latitude);
+        var mymap = L.map('mapid').setView([lat, lng], 13);
+        console.log(mymap);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoibW9jaGFjb3NpbmUxMjA2IiwiYSI6ImNqcTJhbmE1czE2YTQzeXNianA4c3FrY2sifQ.RbdmQEMMo25L1OWZuOasLA'
+        }).addTo(mymap);
 
-    })
+        geoAddress()
 
+        // img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlon + "&position=" + latlon + "&zoom=14&size=400x300&sensor=false&key=AIzaSyAALDv6NEVWFRRIOeI6dV1HiGQNOuhr5Pg";
+        // console.log(img_url);
 
-    //glasses search
+        // $("#map-loc").html("<img src=" + img_url + ">");
 
-    var glasses = "https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list";
-    $.ajax({
-        url: glasses,
-        method: "GET"
-    }).then(function (response) {
+        
 
-        for (var i = 0; i < response.drinks.length; i++) {
-            var option = $("<option>").val(response.drinks[i].strGlass).text(response.drinks[i].strGlass)
-            $("#glassSelect").append(option);
-        }
-    })
+    }
 
+    function geoAddress() {
+        console.log(latlon);
+        var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon + "&key=AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ"
 
-
-
-
-
-    cocktailSearch();
-
-    function cocktailSearch() {
         $.ajax({
-            url: "https://cors-escape.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&format=json&titles=List_of_IBA_official_cocktails&prop=links&pllimit=max",
-            method: "GET"
-        }).then(function (response) {
-            console.log(response)
-            console.log(response.query.pages[8702622].links[0].title);
-            var wikiArticleArray = response.query.pages[8702622].links.map(function (titles) {
-                wikiLinks = titles.title
-                // console.log(titles.title);
-                return wikiLinks;
-            })
-            // console.log(wikiArticleArray);
-
-            $("#searchButton").on("click", function () {
-                var value = $("#cocktailName").val().trim();
-                var cocktailMultiple = value.split(" ").join("+");
-                var cockTailSearchVal = cocktailMultiple;
-                var cocktailURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + cockTailSearchVal;
-                // console.log(cockTailSearchVal);
-                // console.log(cocktailURL);
-
-                $.ajax({
-                    url: cocktailURL,
-                    method: "GET"
-                }).then(function (response) {
-
-
-
-
-                    //Map Arrays for URL, Drink Names, Images, Instructions--------------------
-
-                    var drinkNamesArray = response.drinks.map(function (drinkNames) {
-                        var drinkName = drinkNames.strDrink;
-                        return drinkName;
-                    })
-                    console.log(drinkNamesArray);
-
-                    var drinksWikiUrl = response.drinks.map(function (drinkNames) {
-                        var drinkName = drinkNames.strDrink;
-                        var drinkNameFormatted = drinkName.split(" ").join("_");
-                        var wikiURL = "https://en.wikipedia.org/api/rest_v1/page/summary/" + drinkNameFormatted;
-                        return wikiURL;
-
-
-
-
-                    });
-                    console.log(drinksWikiUrl);
-
-
-                    
-
-
-
-                    for (var i = 0; i < response.drinks.length; i++) {
-
-                        if (wikiArticleArray.includes(response.drinks[i].strDrink)) {
-
-                            $.ajax({
-                                url: drinksWikiUrl,
-                                method: "get",
-                            }).then(function(data){
-                                console.log(data.extract);
-                                var extractDiv = $("<p>").text(data.extract);
-                            });
-                            
-                        }
-
-                        var cocktailCard = $("<div>").addClass("card");
-                        var cocktailCardImageDiv = $("<div>").addClass("card-image")
-                        var cocktailCardImage = $("<img>").attr("src", response.drinks[i].strDrinkThumb);
-                        var cocktailCardContent = $("<div>").addClass("card-content");
-                        var cocktailCardName = $("<h1>").text(response.drinks[i].strDrink);
-                        var cocktailSnippetDiv = $("<div>").attr("id", "wikiDiv");
-                        console.log("snippetDiv created");
-                        var breakSpace = $("<br>");
-                        var ingredientBreakSpace = $("<br><h4>Ingredients: </h4><br>");
-                        var cocktailCardDirections = $("<p>").text(response.drinks[i].strInstructions);
-                        cocktailCardImageDiv.append(cocktailCardImage);
-                        cocktailCardContent.append(cocktailCardName, cocktailSnippetDiv, breakSpace, cocktailCardDirections, ingredientBreakSpace);
-
-
-
-                        // -----------------------------------------------------
-                        // below the only way I know how to pull in the ingredients so far
-
-                        var cocktailIngredient1 = response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1
-
-                        var cocktailIngredient2 = response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2
-
-                        var cocktailIngredient3 = response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3
-
-                        var cocktailIngredient4 = response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4
-
-                        var cocktailIngredient5 = response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5
-
-                        var cocktailIngredient6 = response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6
-
-                        var cocktailIngredient7 = response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7
-
-                        var cocktailIngredient8 = response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8
-
-                        var cocktailIngredient9 = response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9
-
-                        var cocktailIngredient10 = response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10
-
-                        var cocktailIngredient11 = response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11
-
-                        var cocktailIngredient12 = response.drinks[i].strMeasure12 + response.drinks[i].strIngredient12
-
-                        var cocktailIngredient13 = response.drinks[i].strMeasure13 + response.drinks[i].strIngredient13
-
-                        var cocktailIngredient14 = response.drinks[i].strMeasure14 + response.drinks[i].strIngredient14
-
-                        var cocktailIngredient15 = response.drinks[i].strMeasure15 + response.drinks[i].strIngredient15
-
-                        if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0 && cocktailIngredient11.trim().length > 0 && cocktailIngredient12.trim().length > 0 && cocktailIngredient13.trim().length > 0 && cocktailIngredient14.trim().length > 0 && cocktailIngredient15.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10 + " <br> " + "- " + response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11 + " <br> " + "- " + response.drinks[i].strMeasure12 + response.drinks[i].strIngredient12 + " <br> " + "- " + response.drinks[i].strMeasure13 + response.drinks[i].strIngredient13 + " <br> " + "- " + response.drinks[i].strMeasure14 + response.drinks[i].strIngredient14 + " <br> " + "- " + response.drinks[i].strMeasure15 + response.drinks[i].strIngredient15;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0 && cocktailIngredient11.trim().length > 0 && cocktailIngredient12.trim().length > 0 && cocktailIngredient13.trim().length > 0 && cocktailIngredient14.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10 + " <br> " + "- " + response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11 + " <br> " + "- " + response.drinks[i].strMeasure12 + response.drinks[i].strIngredient12 + " <br> " + "- " + response.drinks[i].strMeasure13 + response.drinks[i].strIngredient13 + " <br> " + "- " + response.drinks[i].strMeasure14 + response.drinks[i].strIngredient14;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0 && cocktailIngredient11.trim().length > 0 && cocktailIngredient12.trim().length > 0 && cocktailIngredient13.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10 + " <br> " + "- " + response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11 + " <br> " + "- " + response.drinks[i].strMeasure12 + response.drinks[i].strIngredient12 + " <br> " + "- " + response.drinks[i].strMeasure13 + response.drinks[i].strIngredient13;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0 && cocktailIngredient11.trim().length > 0 && cocktailIngredient12.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10 + " <br> " + "- " + response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11 + " <br> " + "- " + response.drinks[i].strMeasure12 + response.drinks[i].strIngredient12;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0 && cocktailIngredient11.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10 + " <br> " + "- " + response.drinks[i].strMeasure11 + response.drinks[i].strIngredient11;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0 && cocktailIngredient10.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9 + " <br> " + "- " + response.drinks[i].strMeasure10 + response.drinks[i].strIngredient10;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0 && cocktailIngredient9.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8 + " <br> " + "- " + response.drinks[i].strMeasure9 + response.drinks[i].strIngredient9;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0 && cocktailIngredient8.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7 + " <br> " + "- " + response.drinks[i].strMeasure8 + response.drinks[i].strIngredient8;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0 && cocktailIngredient7.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6 + " <br> " + "- " + response.drinks[i].strMeasure7 + response.drinks[i].strIngredient7;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0 && cocktailIngredient6.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5 + " <br> " + "- " + response.drinks[i].strMeasure6 + response.drinks[i].strIngredient6;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0 && cocktailIngredient5.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4 + " <br> " + "- " + response.drinks[i].strMeasure5 + response.drinks[i].strIngredient5;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0 && cocktailIngredient4.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3 + " <br> " + "- " + response.drinks[i].strMeasure4 + response.drinks[i].strIngredient4;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0 && cocktailIngredient3.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2 + " <br> " + "- " + response.drinks[i].strMeasure3 + response.drinks[i].strIngredient3;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0 && cocktailIngredient2.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1 + " <br> " + "- " + response.drinks[i].strMeasure2 + response.drinks[i].strIngredient2;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else if (cocktailIngredient1.trim().length > 0) {
-                            cockTailIngredient = "- " + response.drinks[i].strMeasure1 + response.drinks[i].strIngredient1;
-                            cocktailCardContent.append(cockTailIngredient);
-                        } else {
-                            console.log(false);
-                        }
-
-
-                        //-----------------------------------------------------
-
-
-
-                        cocktailCard.append(cocktailCardImageDiv, cocktailCardContent);
-                        $("#resultsBox").append(cocktailCard);
-                    }
-
-
-                    $("#searchBox").fadeOut(1000);
-                    $("#resultsBox").delay(1000).show();
-                });
-
-            });
+            url: addressURL,
+            method: "GET",
+            success: getAddressDetails,
         });
+
+        console.log(addressURL);
+    }
+
+    function getAddressDetails(data) {
+        console.log(data);
+        console.log(data.results.length);
+        var countryIndex = data.results.length
+        country = data.results[countryIndex - 1].formatted_address;
+        console.log(country);
+        countryPlaceId = data.results[countryIndex - 1].place_id;
+        console.log(countryPlaceId);
+        state = data.results[countryIndex - 2].formatted_address;
+        console.log(state);
+        statePlaceId = data.results[countryIndex - 2].place_id;
+        console.log(statePlaceId);
+        city = data.results[countryIndex - 5].formatted_address;
+        console.log(city);
+        cityPlaceId = data.results[countryIndex - 5].place_id;
+        console.log(cityPlaceId);
+        formattedCityStateName = data.results[countryIndex - 5].address_components[1].long_name + ",_" + data.results[countryIndex - 5].address_components[3].long_name;
+        console.log(formattedCityStateName);
+
+        getPlaceDetails();
+    }
+
+
+
+    function getPlaceDetails() {
+        var cityIdUrl = "https://en.wikipedia.org/api/rest_v1/page/summary/" + formattedCityStateName
+
+        $.ajax({
+            url: cityIdUrl,
+            method: "GET",
+            success: placeDetails,
+        })
+    }
+
+    function placeDetails(data) {
+        console.log(data);
+        $("#map-loc").text(data.extract);
+
+    }
+
+
+    function addressSearch() {
+        var newAddress = $("#locationSearch").val().trim();
+        var newAddressString = newAddress.split(" ").join("+");
+
+        //take address and make it the new URL
+
+        var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + newAddressString + "&key=AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ"
+
+        console.log(addressURL);
+
+
+        $.ajax({
+            url: addressURL,
+            method: "GET",
+            success: addressEntry,
+
+        });
+
+        function addressEntry(response) {
+            console.log(response);
+            console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
+            console.log(response.results[0].formatted_address);
+            latlon = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng
+            lat = response.results[0].geometry.location.lat;
+            lng = response.results[0].geometry.location.lng;
+
+            var mymap = L.map('mapid').setView([lat, lng], 13);
+            console.log(mymap);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox.streets',
+                accessToken: 'pk.eyJ1IjoibW9jaGFjb3NpbmUxMjA2IiwiYSI6ImNqcTJhbmE1czE2YTQzeXNianA4c3FrY2sifQ.RbdmQEMMo25L1OWZuOasLA'
+            }).addTo(mymap);
+
+
+
+            $("#locText").html("Latitude: " + response.results[0].geometry.location.lat + " <br> Longitude: " + response.results[0].geometry.location.lng + " <br> Street Address: " + response.results[0].formatted_address);
+
+            geoAddress()
+        }
+
     }
 });
