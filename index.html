@@ -48,12 +48,11 @@
             </ul>
         </div>
     </nav> -->
-    <div class="container">
         <div class="row">
             <div class="card" id="apiInfo">
                 <div class="card-title">Geolocation, Cross Street</div>
                 <form>
-                <div class="form-group">
+                <div class="form-group" id="formList">
                         <label for="search">Current Location</label>
                         <input type="search" class="form-control" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
                         <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
@@ -61,23 +60,26 @@
                       <button type="submit" class="waves-effect waves-light btn" id="addressButton">Submit</button>
                       <button type="submit" class="waves-effect waves-light btn" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
                     </form>
+                    <div class="row">
+                    <div class="col s12 m6">
                     <div id="mapid"></div>
                     <div class="card-text" id="map-loc">
-                            Placeholder text for data.
                         </div>
+                        <div class="card-text" id="locText">
+                                
+                            </div>
+                    </div>
+                    <div class="col s12 m5">
                         <div class="card-text" id="zamato">
-                            Placeholder text for data.
                         </div>
-                <div class="card-text" id="locText">
-                    Placeholder text for data.
-                </div>
-            
+                
+            </div>
+        </div>
             </div>
         </div>
                 <div id="resultsBox">
 
                 </div>
-            </div>
         </div>
     </div>
     <script src="assets/javascript/main.js"></script>

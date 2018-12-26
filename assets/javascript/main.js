@@ -33,10 +33,10 @@ $(document).ready(function () {
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
 
-        
+
         addressSearch();
         clearField()
-        
+
 
 
     });
@@ -58,6 +58,7 @@ $(document).ready(function () {
         if (mymap !== undefined) {
             mymap.remove();
         }
+        $("#moreResults").remove();
     }
 
     function getLocation() {
@@ -93,8 +94,8 @@ $(document).ready(function () {
 
 
         geoAddress()
-        
 
+        getZamato();
 
     }
 
@@ -109,6 +110,7 @@ $(document).ready(function () {
         });
 
         console.log(addressURL);
+
     }
 
     function getAddressDetails(data) {
@@ -143,7 +145,7 @@ $(document).ready(function () {
         console.log(formattedCityStateName);
 
         getPlaceDetails();
-        getZamato();
+
     }
 
 
@@ -160,9 +162,9 @@ $(document).ready(function () {
 
     function placeDetails(data) {
         console.log(data);
-        $("#map-loc").text(data.extract);
+        $("#map-loc").html("<hr>" + data.extract);
 
-        
+
 
     }
 
@@ -213,26 +215,27 @@ $(document).ready(function () {
             geoAddress()
             getZamato();
         }
+    }
 
-        function getZamato() {
-            var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start="+ resultsCount +"&count=10&lat=" + lat + "&lon=" + lng +"&radius=8047&sort=rating&order=desc";
-            $.ajax({
-                url: zamatoURL,
-                headers: {
-                    "Accept": "application/json",
-                    "user-key": "bbb2d252f54e5d415f243174cd22b200",
-                },
-                success: zamatoRes,
-            })
+    function getZamato() {
+        var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+        $.ajax({
+            url: zamatoURL,
+            headers: {
+                "Accept": "application/json",
+                "user-key": "bbb2d252f54e5d415f243174cd22b200",
+            },
+            success: zamatoRes,
+        })
 
-            // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
+        // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
 
-            // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
+        // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
 
 
-            function zamatoRes(data) {
-                console.log(data);
-                for (var i = 0; i < data.restaurants.length; i ++) {
+        function zamatoRes(data) {
+            console.log(data);
+            for (var i = 0; i < data.restaurants.length; i++) {
                 restLat = data.restaurants[i].restaurant.location.latitude
                 restlng = data.restaurants[i].restaurant.location.longitude
                 console.log(data);
@@ -245,39 +248,45 @@ $(document).ready(function () {
                 console.log("Number of times rated: " + data.restaurants[i].restaurant.user_rating.votes);
                 restMarker = L.marker([restLat, restlng]).addTo(mymap);
                 restMarkerArr.push(restMarker);
-                restMarker.bindPopup("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1]}).openPopup();
-                
+                // restMarker.bindPopup("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1]}).openPopup();
+                restMarker.bindTooltip("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1], direction: "auto"});
+
                 console.log(restMarkerArr);
 
                 var zamatoDiv = $("<p>")
                 var zamatoSec = zamatoDiv.html("<hr>" + data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address);
-                
+
 
                 $("#zamato").append(zamatoSec);
 
-                }
-                moreRestaurants()
             }
-            function moreRestaurants() {
+            // console.log(restMarkerArr[0]._latlng.lat + "," +  restMarkerArr[0]._latlng.lng )
+            // mymap.fitBounds(restMarkerArr.getBounds());
+            mymap.setZoom(9);
+            moreRestaurants()
+        }
+        function moreRestaurants() {
             var moreButton = $("<button>").addClass("waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
-            $("#zamato").append(moreButton);
+            $("#formList").append(moreButton);
 
-                $("#moreResults").on("click", function(){
-                    for(i=0;i<restMarkerArr.length;i++) {
-                        mymap.removeLayer(restMarkerArr[i]);
-                        } 
-                        restMarkerArr = [];
-                    resultsCount += 10;
-                    console.log(resultsCount);
-                    console.log(restMarker);
-                        
-                    $("#zamato").empty();
-                    getZamato();
-                    $("#moreResults").off("click");
-                })
-            }
+            $("#moreResults").on("click", function () {
+                event.preventDefault();
+                $("#moreResults").remove();
+                for (i = 0; i < restMarkerArr.length; i++) {
+                    mymap.removeLayer(restMarkerArr[i]);
+                }
+                restMarkerArr = [];
+                resultsCount += 10;
+                console.log(resultsCount);
+                console.log(restMarker);
 
+                $("#zamato").empty();
+                getZamato();
+                $("#moreResults").off("click");
+            })
         }
 
     }
+
+
 });

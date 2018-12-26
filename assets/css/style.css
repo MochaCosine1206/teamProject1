@@ -12,3 +12,8 @@ body {
 #mapid {
      height: 300px; 
     }
+
+#moreResults {
+    position: relative;
+    float: right;
+}
