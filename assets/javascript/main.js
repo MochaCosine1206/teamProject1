@@ -25,6 +25,7 @@ var restlng;
 var restMarker;
 var restMarkerArr = [];
 var resultsCount = 0;
+var selectedCuisine;
 
 //Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
 //ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
@@ -115,6 +116,32 @@ $(document).ready(function () {
 
     function zamatoCatFunc(data) {
         console.log(data);
+        for (var i = 0; i < data.cuisines.length; i++){
+            console.log(data.cuisines[i].cuisine.cuisine_name);
+            var cuisineOption = $("<option>").val(data.cuisines[i].cuisine.cuisine_id).text(data.cuisines[i].cuisine.cuisine_name);
+            $("#cuisineSel").append(cuisineOption);
+        }
+        
+    }
+
+    function cuisineSelectedOption() {
+        $("#cuisineSel").on("change", function(){
+            selectedCuisine = $("#cuisineSel option:selected").val();
+            console.log(selectedCuisine);
+            $("#moreResults").remove();
+                for (i = 0; i < restMarkerArr.length; i++) {
+                    mymap.removeLayer(restMarkerArr[i]);
+                }
+                restMarkerArr = [];
+                resultsCount += 10;
+                console.log(resultsCount);
+                console.log(restMarker);
+
+                $("#zamato").empty();
+                getZamato();
+        })
+            
+
     }
 
     function geoAddress() {
@@ -250,7 +277,14 @@ $(document).ready(function () {
     }
 
     function getZamato() {
-        var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+
+        if(selectedCuisine) {
+            var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&cuisines=" + selectedCuisine;
+            console.log(zamatoURL);
+        } else {
+            var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+        }
+        
         $.ajax({
             url: zamatoURL,
             headers: {
@@ -322,6 +356,7 @@ $(document).ready(function () {
         }
 
     }
+    cuisineSelectedOption()
 
 
 });
