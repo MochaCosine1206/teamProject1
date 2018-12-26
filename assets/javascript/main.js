@@ -254,7 +254,7 @@ $(document).ready(function () {
                 console.log(restMarkerArr);
 
                 var zamatoDiv = $("<p>")
-                var zamatoSec = zamatoDiv.html("<hr>" + data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address);
+                var zamatoSec = zamatoDiv.html("<hr>" + data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
 
 
                 $("#zamato").append(zamatoSec);
