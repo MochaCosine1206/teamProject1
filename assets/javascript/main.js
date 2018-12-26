@@ -26,6 +26,8 @@ var restMarker;
 var restMarkerArr = [];
 var resultsCount = 0;
 var selectedCuisine;
+var currentTemp;
+var currentCondition;
 
 //Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
 //ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
@@ -224,6 +226,12 @@ $(document).ready(function () {
 
     function weatherData(data) {
         console.log(data)
+        currentTemp = data.main.temp;
+        console.log(currentTemp);
+        currentCondition = data.weather[0].description;
+        console.log(currentCondition);
+        var tempData = $("<p>").addClass("card-title").text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition);
+        $("#leftCard").prepend(tempData);
     }
 
 
