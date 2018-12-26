@@ -1,0 +1,19 @@
+body {
+     margin:0;
+    padding:0;
+ }
+
+
+#resultsBox {
+    display: none;
+}
+
+
+#mapid {
+     height: 300px; 
+    }
+
+#moreResults {
+    position: relative;
+    float: right;
+}
