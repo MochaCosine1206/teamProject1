@@ -26,6 +26,7 @@ var restMarker;
 var restMarkerArr = [];
 var resultsCount = 0;
 var selectedCuisine;
+var selectedEstab;
 var currentTemp;
 var currentCondition;
 
@@ -59,10 +60,12 @@ $(document).ready(function () {
     function clearField() {
         $("#locationSearch").val("");
         $("#zamato").empty();
+        $("#weatherDat").empty();
         if (mymap !== undefined) {
             mymap.remove();
         }
         $("#moreResults").remove();
+        $("#cuisineSel").val("");
     }
 
     function getLocation() {
@@ -97,11 +100,53 @@ $(document).ready(function () {
 
 
 
-        geoAddress()
-        getZamatoCats()
+        geoAddress();
+        getZamatoCats();
+        // getZamatoEstablishmentTypes();
         getZamato();
 
     }
+
+    // function getZamatoEstablishmentTypes() {
+    //     var zamatoEstURL = "https://developers.zomato.com/api/v2.1/establishments?lat=" + lat + "&lon=" + lng;
+    //     $.ajax({
+    //         url: zamatoEstURL,
+    //         headers: {
+    //             "Accept": "application/json",
+    //             "user-key": "bbb2d252f54e5d415f243174cd22b200",
+    //         },
+    //         success: zamatoEstFunc,
+    //     })
+    // }
+
+    // function zamatoEstFunc(data) {
+    //     console.log(data);
+    //     for (var i = 0; i < data.establishments.length; i++){
+    //         console.log(data.establishments[i].establishment.name);
+    //         var establishmentOption = $("<option>").val(data.establishments[i].establishment.id).text(data.establishments[i].establishment.name);
+    //         $("#estabSel").append(establishmentOption);
+    //     }
+    // }
+
+    // function establishmentSelectedOption() {
+    //     $("#estabSel").on("change", function(){
+    //         selectedEstab = $("#estabSel option:selected").val();
+    //         console.log(selectedEstab);
+    //         $("#moreResults").remove();
+    //             for (i = 0; i < restMarkerArr.length; i++) {
+    //                 mymap.removeLayer(restMarkerArr[i]);
+    //             }
+    //             restMarkerArr = [];
+    //             resultsCount += 10;
+    //             console.log(resultsCount);
+    //             console.log(restMarker);
+
+    //             $("#zamato").empty();
+    //             getZamato();
+    //     })
+            
+
+    // }
 
     function getZamatoCats() {
 
@@ -135,6 +180,7 @@ $(document).ready(function () {
                     mymap.removeLayer(restMarkerArr[i]);
                 }
                 restMarkerArr = [];
+                resultsCount = 0;
                 resultsCount += 10;
                 console.log(resultsCount);
                 console.log(restMarker);
@@ -230,7 +276,7 @@ $(document).ready(function () {
         console.log(currentTemp);
         currentCondition = data.weather[0].description;
         console.log(currentCondition);
-        var tempData = $("<p>").addClass("card-title").text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition);
+        var tempData = $("<p>").addClass("card-title").attr("id", "weatherDat").text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition);
         $("#leftCard").prepend(tempData);
     }
 
@@ -285,6 +331,13 @@ $(document).ready(function () {
     }
 
     function getZamato() {
+
+        // if(selectedEstab) {
+        //     var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&establishment_type=" + selectedEstab;
+        //     console.log(zamatoURL);
+        // } else {
+        //     var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+        // }
 
         if(selectedCuisine) {
             var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&cuisines=" + selectedCuisine;
@@ -364,7 +417,8 @@ $(document).ready(function () {
         }
 
     }
-    cuisineSelectedOption()
+    cuisineSelectedOption();
+    // establishmentSelectedOption();
 
 
 });
