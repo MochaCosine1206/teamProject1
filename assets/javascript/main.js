@@ -11,34 +11,54 @@ firebase.initializeApp(config);
 var database = firebase.database();
 var latlon;
 var city;
-var cityPlaceId;
+var hamlet;
+var county;
+var residential;
 var state;
-var statePlaceId;
 var country;
-var cityPlaceId;
 var formattedCityStateName;
 var lat;
 var lng;
+var mymap;
+var restLat;
+var restlng;
+var restMarker;
+var restMarkerArr = [];
+var resultsCount = 0;
 
 //Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
+//ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
 
 $(document).ready(function () {
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
 
+        
         addressSearch();
-        $("#locationSearch").val("");
+        clearField()
+        
 
 
     });
+
+
 
     $("#locationButton").on("click", function (event) {
 
         event.preventDefault();
-
+        clearField()
         getLocation();
 
+
     });
+
+    function clearField() {
+        $("#locationSearch").val("");
+        $("#zamato").empty();
+        if (mymap !== undefined) {
+            mymap.remove();
+        }
+    }
 
     function getLocation() {
         console.log(navigator.geolocation);
@@ -58,7 +78,8 @@ $(document).ready(function () {
         lng = position.coords.longitude;
         console.log(typeof latlon)
         console.log(typeof position.coords.latitude);
-        var mymap = L.map('mapid').setView([lat, lng], 13);
+        console.log(mymap);
+        mymap = L.map('mapid').setView([lat, lng], 13);
         console.log(mymap);
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -66,21 +87,20 @@ $(document).ready(function () {
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1IjoibW9jaGFjb3NpbmUxMjA2IiwiYSI6ImNqcTJhbmE1czE2YTQzeXNianA4c3FrY2sifQ.RbdmQEMMo25L1OWZuOasLA'
         }).addTo(mymap);
+        var marker = L.marker([lat, lng]).addTo(mymap);
+
+
+
 
         geoAddress()
-
-        // img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" + latlon + "&position=" + latlon + "&zoom=14&size=400x300&sensor=false&key=AIzaSyAALDv6NEVWFRRIOeI6dV1HiGQNOuhr5Pg";
-        // console.log(img_url);
-
-        // $("#map-loc").html("<img src=" + img_url + ">");
-
         
+
 
     }
 
     function geoAddress() {
         console.log(latlon);
-        var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlon + "&key=AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ"
+        var addressURL = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng + "&zoom=18&addressdetails=1"
 
         $.ajax({
             url: addressURL,
@@ -93,24 +113,37 @@ $(document).ready(function () {
 
     function getAddressDetails(data) {
         console.log(data);
-        console.log(data.results.length);
-        var countryIndex = data.results.length
-        country = data.results[countryIndex - 1].formatted_address;
+        console.log(data.address);
+        country = data.address.country;
         console.log(country);
-        countryPlaceId = data.results[countryIndex - 1].place_id;
-        console.log(countryPlaceId);
-        state = data.results[countryIndex - 2].formatted_address;
+        state = data.address.state;
         console.log(state);
-        statePlaceId = data.results[countryIndex - 2].place_id;
-        console.log(statePlaceId);
-        city = data.results[countryIndex - 5].formatted_address;
+        residential = data.address.residential;
+        console.log(residential);
+        county = data.address.county;
+        console.log(county);
+        hamlet = data.address.hamlet;
+        console.log(hamlet);
+        city = data.address.city;
         console.log(city);
-        cityPlaceId = data.results[countryIndex - 5].place_id;
-        console.log(cityPlaceId);
-        formattedCityStateName = data.results[countryIndex - 5].address_components[1].long_name + ",_" + data.results[countryIndex - 5].address_components[3].long_name;
+        if (city === undefined && hamlet === undefined && county === undefined) {
+            formattedCityStateName = residential + ",_" + state;
+            console.log(formattedCityStateName);
+        } else if (city === undefined && hamlet === undefined) {
+            formattedCityStateName = county + ",_" + state;
+            console.log(formattedCityStateName);
+        } else if (city === undefined) {
+            formattedCityStateName = hamlet + ",_" + state;
+            console.log(formattedCityStateName);
+        } else {
+            formattedCityStateName = city + ",_" + state;
+            console.log(formattedCityStateName);
+        }
+
         console.log(formattedCityStateName);
 
         getPlaceDetails();
+        getZamato();
     }
 
 
@@ -129,16 +162,21 @@ $(document).ready(function () {
         console.log(data);
         $("#map-loc").text(data.extract);
 
+        
+
     }
 
 
     function addressSearch() {
         var newAddress = $("#locationSearch").val().trim();
+        console.log(newAddress);
         var newAddressString = newAddress.split(" ").join("+");
 
         //take address and make it the new URL
 
-        var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + newAddressString + "&key=AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ"
+        var addressURL = "https://nominatim.openstreetmap.org/search?q=" + newAddressString + "&format=json&addressdetails=1"
+
+
 
         console.log(addressURL);
 
@@ -152,13 +190,15 @@ $(document).ready(function () {
 
         function addressEntry(response) {
             console.log(response);
-            console.log(response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng);
-            console.log(response.results[0].formatted_address);
-            latlon = response.results[0].geometry.location.lat + "," + response.results[0].geometry.location.lng
-            lat = response.results[0].geometry.location.lat;
-            lng = response.results[0].geometry.location.lng;
-
-            var mymap = L.map('mapid').setView([lat, lng], 13);
+            console.log(response[0].lat + "," + response[0].lon);
+            console.log(response[0].display_name);
+            latlon = response[0].lat + "," + response[0].lon
+            lat = response[0].lat;
+            lng = response[0].lon;
+            if (mymap === undefined) {
+                console.log(undefined)
+            }
+            mymap = L.map('mapid').setView([lat, lng], 13);
             console.log(mymap);
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -166,12 +206,77 @@ $(document).ready(function () {
                 id: 'mapbox.streets',
                 accessToken: 'pk.eyJ1IjoibW9jaGFjb3NpbmUxMjA2IiwiYSI6ImNqcTJhbmE1czE2YTQzeXNianA4c3FrY2sifQ.RbdmQEMMo25L1OWZuOasLA'
             }).addTo(mymap);
+            var marker = L.marker([lat, lng]).addTo(mymap);
 
-
-
-            $("#locText").html("Latitude: " + response.results[0].geometry.location.lat + " <br> Longitude: " + response.results[0].geometry.location.lng + " <br> Street Address: " + response.results[0].formatted_address);
+            $("#locText").html("Latitude: " + response[0].lat + " <br> Longitude: " + response[0].lon + " <br> Street Address: " + response[0].display_name);
 
             geoAddress()
+            getZamato();
+        }
+
+        function getZamato() {
+            var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start="+ resultsCount +"&count=10&lat=" + lat + "&lon=" + lng +"&radius=8047&sort=rating&order=desc";
+            $.ajax({
+                url: zamatoURL,
+                headers: {
+                    "Accept": "application/json",
+                    "user-key": "bbb2d252f54e5d415f243174cd22b200",
+                },
+                success: zamatoRes,
+            })
+
+            // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
+
+            // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
+
+
+            function zamatoRes(data) {
+                console.log(data);
+                for (var i = 0; i < data.restaurants.length; i ++) {
+                restLat = data.restaurants[i].restaurant.location.latitude
+                restlng = data.restaurants[i].restaurant.location.longitude
+                console.log(data);
+                console.log("restaurant Name: " + data.restaurants[i].restaurant.name);
+                console.log("Type of Cuisine: " + data.restaurants[i].restaurant.cuisines);
+                console.log("Address: " + data.restaurants[i].restaurant.location.address);
+                console.log("Menu Link: " + data.restaurants[i].restaurant.menu_url);
+                console.log("Avg rating: " + data.restaurants[i].restaurant.user_rating.aggregate_rating);
+                console.log("Rated: " + data.restaurants[i].restaurant.user_rating.rating_text);
+                console.log("Number of times rated: " + data.restaurants[i].restaurant.user_rating.votes);
+                restMarker = L.marker([restLat, restlng]).addTo(mymap);
+                restMarkerArr.push(restMarker);
+                restMarker.bindPopup("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1]}).openPopup();
+                
+                console.log(restMarkerArr);
+
+                var zamatoDiv = $("<p>")
+                var zamatoSec = zamatoDiv.html("<hr>" + data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address);
+                
+
+                $("#zamato").append(zamatoSec);
+
+                }
+                moreRestaurants()
+            }
+            function moreRestaurants() {
+            var moreButton = $("<button>").addClass("waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
+            $("#zamato").append(moreButton);
+
+                $("#moreResults").on("click", function(){
+                    for(i=0;i<restMarkerArr.length;i++) {
+                        mymap.removeLayer(restMarkerArr[i]);
+                        } 
+                        restMarkerArr = [];
+                    resultsCount += 10;
+                    console.log(resultsCount);
+                    console.log(restMarker);
+                        
+                    $("#zamato").empty();
+                    getZamato();
+                    $("#moreResults").off("click");
+                })
+            }
+
         }
 
     }
