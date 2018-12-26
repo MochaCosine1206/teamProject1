@@ -1,82 +1,25 @@
-.faveImg {
-    height: 100px;
-    width: 100px;
-}
-
-.row {
-    display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
-}
-
-.column-fave {
-    flex: 25%;
-    max-width: 25%;
-    padding: 0 4px;
-  }
-
-.material-icons {
-    font-size: 1.5rem;
-}
-
-.card-content {
-    text-align: center;
-}
-
-#links {
-    float: right;
-    margin-right: 2%;
-}
-
-body{
-    background-image: url("https://images.pexels.com/photos/613037/pexels-photo-613037.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=500&w=750");
-}
-
-.nav-wrapper{
-    background-color: rgb(224, 129, 129);
-    position: fixed;
-    top:60%;
-    left: 60%;
-    transform: translate(-60%,-60%);
-}
-
-.jumbotron{
-    background-color: transparent;
-    color:rgba(0, 0, 0, 0.555);
-    text-align: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-
+body {
+    margin:0;
+   padding:0;
 }
 
 
+#resultsBox {
+   display: none;
+}
+
+#leftPane {
+       position: -webkit-sticky; /* Safari */
+       position: sticky;
+       top: 0;
+}
 
 
+#mapid {
+    height: 300px; 
+   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  @media screen and (max-width: 800px) {
-    .col {
-      flex: 50%;
-      max-width: 50%;
-    }
-  }
-
-  @media screen and (max-width: 600px) {
-    .col {
-      flex: 100%;
-      max-width: 100%;
-    }
-  }
+#moreResults {
+   position: relative;
+   float: right;
+}
