@@ -216,21 +216,21 @@ $(document).ready(function () {
         console.log(country);
         state = data.address.state;
         console.log(state);
-        residential = data.address.residential;
-        console.log(residential);
         county = data.address.county;
         console.log(county);
-        town = data.address.town;
-        console.log(town);
+        residential = data.address.residential;
+        console.log(residential);
         hamlet = data.address.hamlet;
         console.log(hamlet);
+        town = data.address.town;
+        console.log(town);
         city = data.address.city;
         console.log(city);
-        if (city === undefined && hamlet === undefined && county === undefined) {
-            formattedCityStateName = residential + ",_" + state;
+        if (city === undefined && hamlet === undefined && town === undefined) {
+            formattedCityStateName = county + ",_" + state;
             console.log(formattedCityStateName);
         } else if (city === undefined && hamlet === undefined) {
-            formattedCityStateName = county + ",_" + state;
+            formattedCityStateName = town + ",_" + state;
             console.log(formattedCityStateName);
         } else if (city === undefined) {
             formattedCityStateName = hamlet + ",_" + state;
@@ -239,6 +239,20 @@ $(document).ready(function () {
             formattedCityStateName = city + ",_" + state;
             console.log(formattedCityStateName);
         }
+
+        // if (city === undefined) {
+        //     formattedCityStateName = town + ",_" + state;
+        // } else if (town === undefined){
+        //     formattedCityStateName = hamlet + ",_" + state;
+        // } else if (hamlet === undefined) {
+        //     formattedCityStateName = residential + ",_" + state;
+        // } else if (residential === undefined){
+        //     formattedCityStateName = county + ",_" + state;
+        // } else if (county === undefined) {
+        //     formattedCityStateName = state;
+        // } else {
+        //     formattedCityStateName = city + ",_" + state;
+        // }
 
         console.log(formattedCityStateName);
 
@@ -261,7 +275,7 @@ $(document).ready(function () {
 
     function placeDetails(data) {
         console.log(data);
-        $("#map-loc").html("<img id='wikithumb' src=" + data.thumbnail.source +  ">" + data.extract_html + "<a href=" + data.content_urls.desktop + ">wikipedia link</a>");
+        $("#map-loc").html("<img id='wikithumb' src=" + data.thumbnail.source +  ">" + data.extract_html + "<a href=" + data.content_urls.desktop.page + " target='_blank'>wikipedia link</a>");
     }
 
     function getWeatherData() {
