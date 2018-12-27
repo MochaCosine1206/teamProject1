@@ -12,6 +12,7 @@ var database = firebase.database();
 var latlon;
 var city;
 var hamlet;
+var town;
 var county;
 var residential;
 var state;
@@ -30,7 +31,7 @@ var selectedEstab;
 var currentTemp;
 var currentCondition;
 
-//Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
+//Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ (not currently using)
 //ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
 //OpenWeatherMap API KEY: ea5e0c43f629fa52f7b65eb894ba50e7
 
@@ -66,6 +67,8 @@ $(document).ready(function () {
         }
         $("#moreResults").remove();
         $("#cuisineSel").val("");
+        selectedCuisine = "";
+        resultsCount = 0;
     }
 
     function getLocation() {
@@ -344,6 +347,8 @@ $(document).ready(function () {
             console.log(zamatoURL);
         } else {
             var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+            console.log(zamatoURL);
+            console.log(selectedCuisine);   
         }
         
         $.ajax({
@@ -355,9 +360,6 @@ $(document).ready(function () {
             success: zamatoRes,
         })
 
-        // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
-
-        // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
 
 
         function zamatoRes(data) {
