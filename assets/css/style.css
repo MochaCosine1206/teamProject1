@@ -35,7 +35,7 @@ body::after{
 } 
 
 ::-webkit-scrollbar {
-    width: 20px;
+    width: 15px;
   }
 
 ::-webkit-scrollbar-track {
@@ -47,3 +47,7 @@ border-radius: 10px;
     background: orange; 
     border-radius: 5px;
   }
+
+#map-loc {
+    margin: 4px;
+}

@@ -49,13 +49,12 @@
     </header>
 
 
-    
     <div class="container center" id="apiInfo">
         <form>
             <div class="form-group center" id="formList">
-                <label for="search"><b>Current Location</b></label>
-                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
-                <!-- <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small> -->
+              <label for="search"><b>Current Location</b></label>
+              <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
+                
               </div>
               <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
               <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
@@ -65,60 +64,38 @@
     <br>
 
     <div class="container">
-        <div class="row">
+        <div class="row center">
+            <div class="col s12 m6">
+                <label>Select Cuisine</label>
+                <select class="browser-default" id="cuisineSel">
+                    <option value="" disabled selected>Choose your cuisine</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
+
+    <div class="container">
+        <div class="row">
             <div class="col s6" id ="leftPane">
-                <div id="mapid"></div>
-                <div class="card-text" id="map-loc">
-                    </div>
-                <div class="card-text" id="locText">
-                    </div>
+              <div id="leftCard">
+                <div class="card-img " id="mapid"></div>
+                    <div class="card-content" id="map-loc">
+                        </div>
+                    <div class="card-content" id="loc-text">
+                        </div>
+              </div>
             </div>
 
             <div class="col s6">
-                <div class="card-text" id="zamato" style="width: 500px; height: 450px; overflow: auto">
+                <div class="card-text" id="zamato" style="width: 500px; height: 690px; overflow: auto">
                 </div>
             </div>
 
         </div>
     </div>
 
-        <!-- <div class="row">
-                <div class="card" id="apiInfo">
-                    <div class="card-title">
-                        <h1 class="header black-text">Tasty Maps</h1>
-                    </div>
-                    <form>
-                    <div class="form-group" id="formList">
-                            <label for="search">Current Location</label>
-                            <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
-                            <small id="searchHelp" class="form-text text-muted">This box is for testing purposes only.</small>
-                          </div>
-                          <button type="submit" class="waves-effect waves-light btn" id="addressButton">Submit</button>
-                          <button type="submit" class="waves-effect waves-light btn" id="locationButton">Get Location <i class="fas fa-location-arrow"></i></button>
-                        </form>
-                <div class="row">
-                    <div class="col s12 m6">
-                        <div id="mapid"></div>
-                            <div class="card-text" id="map-loc">
-                                </div>
-                            <div class="card-text" id="locText">
-                                </div>
-                        </div>
-                        <div class="col s12 m5">
-                            <div class="card-text" id="zamato">
-                                </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-                    <div id="resultsBox">
-    
-                    </div>
-            </div>
-        </div> -->
+    <script src="assets/javascript/main.js"></script>
 
-        <script src="assets/javascript/main.js"></script>
     </body>
-    
     </html>
