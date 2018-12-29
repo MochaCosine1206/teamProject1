@@ -30,32 +30,22 @@ var selectedEstab;
 var currentTemp;
 var currentCondition;
 
-//Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
-//ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
-//OpenWeatherMap API KEY: ea5e0c43f629fa52f7b65eb894ba50e7
 
 $(document).ready(function () {
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
 
-
         addressSearch();
         clearField()
-
-
-
     });
-
 
 
     $("#locationButton").on("click", function (event) {
-
         event.preventDefault();
         clearField()
         getLocation();
-
-
     });
+
 
     function clearField() {
         $("#locationSearch").val("");
@@ -67,6 +57,7 @@ $(document).ready(function () {
         $("#moreResults").remove();
         $("#cuisineSel").val("");
     }
+
 
     function getLocation() {
         console.log(navigator.geolocation);
@@ -88,6 +79,7 @@ $(document).ready(function () {
         console.log(typeof position.coords.latitude);
         console.log(mymap);
         mymap = L.map('mapid').setView([lat, lng], 13);
+        $("#mapid").css({"border": "4px inset white"});
         console.log(mymap);
         L.tileLayer('https://api.mapbox.com/styles/v1/mochacosine1206/cjq2cj6sx2l172rl7r4l5nkp1/tiles/256/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -97,60 +89,15 @@ $(document).ready(function () {
         }).addTo(mymap);
         var marker = L.marker([lat, lng]).addTo(mymap);
         
-
-
-
         geoAddress();
         getZamatoCats();
-        // getZamatoEstablishmentTypes();
         getZamato();
-
     }
 
-    // function getZamatoEstablishmentTypes() {
-    //     var zamatoEstURL = "https://developers.zomato.com/api/v2.1/establishments?lat=" + lat + "&lon=" + lng;
-    //     $.ajax({
-    //         url: zamatoEstURL,
-    //         headers: {
-    //             "Accept": "application/json",
-    //             "user-key": "bbb2d252f54e5d415f243174cd22b200",
-    //         },
-    //         success: zamatoEstFunc,
-    //     })
-    // }
-
-    // function zamatoEstFunc(data) {
-    //     console.log(data);
-    //     for (var i = 0; i < data.establishments.length; i++){
-    //         console.log(data.establishments[i].establishment.name);
-    //         var establishmentOption = $("<option>").val(data.establishments[i].establishment.id).text(data.establishments[i].establishment.name);
-    //         $("#estabSel").append(establishmentOption);
-    //     }
-    // }
-
-    // function establishmentSelectedOption() {
-    //     $("#estabSel").on("change", function(){
-    //         selectedEstab = $("#estabSel option:selected").val();
-    //         console.log(selectedEstab);
-    //         $("#moreResults").remove();
-    //             for (i = 0; i < restMarkerArr.length; i++) {
-    //                 mymap.removeLayer(restMarkerArr[i]);
-    //             }
-    //             restMarkerArr = [];
-    //             resultsCount += 10;
-    //             console.log(resultsCount);
-    //             console.log(restMarker);
-
-    //             $("#zamato").empty();
-    //             getZamato();
-    //     })
-            
-
-    // }
 
     function getZamatoCats() {
-
         var zamatoCatURL = "https://developers.zomato.com/api/v2.1/cuisines?lat=" + lat + "&lon=" + lng;
+    
         $.ajax({
             url: zamatoCatURL,
             headers: {
@@ -158,8 +105,10 @@ $(document).ready(function () {
                 "user-key": "bbb2d252f54e5d415f243174cd22b200",
             },
             success: zamatoCatFunc,
-        })
-    }
+          })
+        }
+      }
+
 
     function zamatoCatFunc(data) {
         console.log(data);
@@ -167,9 +116,9 @@ $(document).ready(function () {
             console.log(data.cuisines[i].cuisine.cuisine_name);
             var cuisineOption = $("<option>").val(data.cuisines[i].cuisine.cuisine_id).text(data.cuisines[i].cuisine.cuisine_name);
             $("#cuisineSel").append(cuisineOption);
-        }
-        
+        } 
     }
+
 
     function cuisineSelectedOption() {
         $("#cuisineSel").on("change", function(){
@@ -187,10 +136,9 @@ $(document).ready(function () {
 
                 $("#zamato").empty();
                 getZamato();
-        })
-            
+                })
+               }
 
-    }
 
     function geoAddress() {
         console.log(latlon);
@@ -201,10 +149,9 @@ $(document).ready(function () {
             method: "GET",
             success: getAddressDetails,
         });
-
         console.log(addressURL);
+      }
 
-    }
 
     function getAddressDetails(data) {
         console.log(data);
@@ -241,9 +188,7 @@ $(document).ready(function () {
 
         getPlaceDetails();
         getWeatherData()
-
-    }
-
+      }
 
 
     function getPlaceDetails() {
@@ -254,12 +199,18 @@ $(document).ready(function () {
             method: "GET",
             success: placeDetails,
         })
-    }
+      }
 
+
+//function below is getting the information data for the area that has been searched
     function placeDetails(data) {
         console.log(data);
-        $("#map-loc").html("<img id='wikithumb' src=" + data.thumbnail.source +  ">" + data.extract_html + "<a href=" + data.content_urls.desktop + ">wikipedia link</a>");
+        $("#map-loc").html("<img id='wikithumb' src=" + data.thumbnail.source +  ">");
+        $("#map-loc").addClass("center");
+        $("#loc-text").html(data.extract_html + "<a href=" + data.content_urls.desktop + ">wikipedia link</a>");
+        $("#loc-text").css({"background-color": "white", "opacity": "0.8", "padding": "5px", "display": "block"});
     }
+
 
     function getWeatherData() {
         var weatherURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lng + "&APPID=ea5e0c43f629fa52f7b65eb894ba50e7&units=imperial";
@@ -267,8 +218,9 @@ $(document).ready(function () {
             url: weatherURL,
             method: "GET",
             success: weatherData
-        })
+        });
     }
+
 
     function weatherData(data) {
         console.log(data)
@@ -276,7 +228,9 @@ $(document).ready(function () {
         console.log(currentTemp);
         currentCondition = data.weather[0].description;
         console.log(currentCondition);
-        var tempData = $("<p>").addClass("card-title").attr("id", "weatherDat").text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition);
+        var tempData = $("<p>").addClass("card-title center").attr("id", "weatherDat")
+            .text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition)
+            .css({"color": "white", "font-size": "20px"});
         $("#leftCard").prepend(tempData);
     }
 
@@ -289,9 +243,6 @@ $(document).ready(function () {
         //take address and make it the new URL
 
         var addressURL = "https://nominatim.openstreetmap.org/search?q=" + newAddressString + "&format=json&addressdetails=1"
-
-
-
         console.log(addressURL);
 
 
@@ -299,8 +250,8 @@ $(document).ready(function () {
             url: addressURL,
             method: "GET",
             success: addressEntry,
-
         });
+
 
         function addressEntry(response) {
             console.log(response);
@@ -323,22 +274,16 @@ $(document).ready(function () {
             var marker = L.marker([lat, lng]).addTo(mymap);
 
             $("#locText").html("Latitude: " + response[0].lat + " <br> Longitude: " + response[0].lon + " <br> Street Address: " + response[0].display_name);
-
-            geoAddress()
-            getZamatoCats()
+            geoAddress();
+            getZamatoCats();
             getZamato();
+          }
         }
-    }
 
     function getZamato() {
 
-        // if(selectedEstab) {
-        //     var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&establishment_type=" + selectedEstab;
-        //     console.log(zamatoURL);
-        // } else {
-        //     var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
-        // }
 
+    function getZamato() {
         if(selectedCuisine) {
             var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&cuisines=" + selectedCuisine;
             console.log(zamatoURL);
@@ -363,8 +308,8 @@ $(document).ready(function () {
         function zamatoRes(data) {
             console.log(data);
             for (var i = 0; i < data.restaurants.length; i++) {
-                restLat = data.restaurants[i].restaurant.location.latitude
-                restlng = data.restaurants[i].restaurant.location.longitude
+                restLat = data.restaurants[i].restaurant.location.latitude;
+                restlng = data.restaurants[i].restaurant.location.longitude;
                 console.log(data);
                 console.log("restaurant Name: " + data.restaurants[i].restaurant.name);
                 console.log("Type of Cuisine: " + data.restaurants[i].restaurant.cuisines);
@@ -375,29 +320,38 @@ $(document).ready(function () {
                 console.log("Number of times rated: " + data.restaurants[i].restaurant.user_rating.votes);
                 restMarker = L.marker([restLat, restlng]).addTo(mymap);
                 restMarkerArr.push(restMarker);
-                // restMarker.bindPopup("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1]}).openPopup();
                 restMarker.bindTooltip("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1], direction: "auto"});
 
                 console.log(restMarkerArr);
 
-                var zamatoDivCard = $("<div>").addClass("card blue lighten-2");
+                var zamatoDivCard = $("<div>").addClass("card orange lighten-2");
+                zamatoDivCard.css({"opacity": "0.9"});
                 var zamatoDivCardContent = $("<div>").addClass("card-content white-text");
                 var zamatoDivCardText = $("<p>");
-                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
-                zamatoDivCardText.append(zamatoSec);
-                zamatoDivCardContent.append(zamatoDivCardText)
-                zamatoDivCard.append(zamatoDivCardContent)
-                $("#zamato").append(zamatoDivCard);
+                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" 
+                    + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
 
+                var zamatoImgSpot = $("<div>").addClass("card-panel");
+                var zamatoImg = zamatoImgSpot.html(data.restaurants[i].restaurant.thumb);
+                console.log(data.restaurants[i].restaurant.thumb);
+
+                zamatoImgSpot.append(zamatoDivCardContent);
+                zamatoImg.append(zamatoImgSpot);
+
+                zamatoDivCardText.append(zamatoSec);
+                zamatoDivCardContent.append(zamatoDivCardText);
+                zamatoDivCard.append(zamatoDivCardContent);
+                $("#zamato").append(zamatoDivCard);
             }
-            // console.log(restMarkerArr[0]._latlng.lat + "," +  restMarkerArr[0]._latlng.lng )
-            // mymap.fitBounds(restMarkerArr.getBounds());
             mymap.setZoom(11);
             moreRestaurants()
         }
+
+
         function moreRestaurants() {
-            var moreButton = $("<button>").addClass("waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
+            var moreButton = $("<button>").addClass("yellow darken-2 waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
             $("#formList").append(moreButton);
+
 
             $("#moreResults").on("click", function () {
                 event.preventDefault();
@@ -415,10 +369,8 @@ $(document).ready(function () {
                 $("#moreResults").off("click");
             })
         }
-
     }
     cuisineSelectedOption();
     // establishmentSelectedOption();
-
-
 });
+
