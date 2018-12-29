@@ -30,9 +30,6 @@ var selectedEstab;
 var currentTemp;
 var currentCondition;
 
-//Google Maps apikey: AIzaSyB-DVMcEdGN_fvf9j-0lmmWrJmUAs3OTdQ
-//ZAMATO API KEY:bbb2d252f54e5d415f243174cd22b200
-//OpenWeatherMap API KEY: ea5e0c43f629fa52f7b65eb894ba50e7
 
 $(document).ready(function () {
     $("#addressButton").on("click", function (event) {
@@ -101,6 +98,7 @@ $(document).ready(function () {
 
     function getZamatoCats() {
         var zamatoCatURL = "https://developers.zomato.com/api/v2.1/cuisines?lat=" + lat + "&lon=" + lng;
+    
         $.ajax({
             url: zamatoCatURL,
             headers: {
@@ -275,8 +273,8 @@ $(document).ready(function () {
             var marker = L.marker([lat, lng]).addTo(mymap);
             $("#locText").html("Latitude: " + response[0].lat + " <br> Longitude: " + response[0].lon + " <br> Street Address: " + response[0].display_name);
 
-            geoAddress()
-            getZamatoCats()
+            geoAddress();
+            getZamatoCats();
             getZamato();
         }
     }
@@ -303,8 +301,8 @@ $(document).ready(function () {
         function zamatoRes(data) {
             console.log(data);
             for (var i = 0; i < data.restaurants.length; i++) {
-                restLat = data.restaurants[i].restaurant.location.latitude
-                restlng = data.restaurants[i].restaurant.location.longitude
+                restLat = data.restaurants[i].restaurant.location.latitude;
+                restlng = data.restaurants[i].restaurant.location.longitude;
                 console.log(data);
                 console.log("restaurant Name: " + data.restaurants[i].restaurant.name);
                 console.log("Type of Cuisine: " + data.restaurants[i].restaurant.cuisines);
@@ -315,7 +313,6 @@ $(document).ready(function () {
                 console.log("Number of times rated: " + data.restaurants[i].restaurant.user_rating.votes);
                 restMarker = L.marker([restLat, restlng]).addTo(mymap);
                 restMarkerArr.push(restMarker);
-                // restMarker.bindPopup("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1]}).openPopup();
                 restMarker.bindTooltip("<p>" +data.restaurants[i].restaurant.name + "</p>" +  data.restaurants[i].restaurant.location.address, {offset: [0,1], direction: "auto"});
 
                 console.log(restMarkerArr);
@@ -324,14 +321,21 @@ $(document).ready(function () {
                 zamatoDivCard.css({"opacity": "0.9"});
                 var zamatoDivCardContent = $("<div>").addClass("card-content white-text");
                 var zamatoDivCardText = $("<p>");
-                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
+                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" 
+                    + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
+
+                var zamatoImgSpot = $("<div>").addClass("card-panel");
+                var zamatoImg = zamatoImgSpot.html(data.restaurants[i].restaurant.thumb);
+                console.log(data.restaurants[i].restaurant.thumb);
+
+                zamatoImgSpot.append(zamatoDivCardContent);
+                zamatoImg.append(zamatoImgSpot);
+
                 zamatoDivCardText.append(zamatoSec);
-                zamatoDivCardContent.append(zamatoDivCardText)
-                zamatoDivCard.append(zamatoDivCardContent)
+                zamatoDivCardContent.append(zamatoDivCardText);
+                zamatoDivCard.append(zamatoDivCardContent);
                 $("#zamato").append(zamatoDivCard);
             }
-            // console.log(restMarkerArr[0]._latlng.lat + "," +  restMarkerArr[0]._latlng.lng )
-            // mymap.fitBounds(restMarkerArr.getBounds());
             mymap.setZoom(11);
             moreRestaurants()
         }
