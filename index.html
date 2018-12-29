@@ -26,14 +26,14 @@
    <!-- MapBox -->
     <script src='https://api.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+
     <!--fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
         crossorigin="anonymous">
     <!-- materialize icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Our styles and script -->
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
-    
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />  
 </head>
 
 <body>
@@ -43,6 +43,12 @@
             <div class="nav-wrapper">
                 <div class="row center">
                     <h1 class='header orange-text'>Tasty Maps</h1>
+                        <a href="#" class="brand-logo">Logo</a>
+                          <ul id="nav-mobile" class="right hide-on-med-and-down">
+                            <li><a href="sass.html">Sass</a></li>
+                            <li><a href="badges.html">Components</a></li>
+                            <li><a href="collapsible.html">JavaScript</a></li>
+                          </ul>
                 </div> 
             </div>
         </div>
@@ -50,14 +56,15 @@
 
 
     <div class="container center" id="apiInfo">
-        <form>
-            <div class="form-group center" id="formList">
-              <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
-                
+        <div class="card-title">Geolocation, Cross Street</div>
+          <form>
+              <div class="form-group center" id="formList">
+                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
               </div>
-              <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
-              <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="large material-icons">add_location</i>
-        </form>
+
+                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
+                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="large material-icons">add_location</i>
+          </form>
     </div>
 
     <br>

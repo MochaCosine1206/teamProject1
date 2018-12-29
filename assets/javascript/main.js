@@ -40,7 +40,6 @@ $(document).ready(function () {
     });
 
 
-
     $("#locationButton").on("click", function (event) {
         event.preventDefault();
         clearField()
@@ -106,8 +105,9 @@ $(document).ready(function () {
                 "user-key": "bbb2d252f54e5d415f243174cd22b200",
             },
             success: zamatoCatFunc,
-        })
-    }
+          })
+        }
+      }
 
 
     function zamatoCatFunc(data) {
@@ -136,8 +136,8 @@ $(document).ready(function () {
 
                 $("#zamato").empty();
                 getZamato();
-        })
-    }
+                })
+               }
 
 
     function geoAddress() {
@@ -150,7 +150,7 @@ $(document).ready(function () {
             success: getAddressDetails,
         });
         console.log(addressURL);
-    }
+      }
 
 
     function getAddressDetails(data) {
@@ -188,7 +188,7 @@ $(document).ready(function () {
 
         getPlaceDetails();
         getWeatherData()
-    }
+      }
 
 
     function getPlaceDetails() {
@@ -199,14 +199,14 @@ $(document).ready(function () {
             method: "GET",
             success: placeDetails,
         })
-    }
+      }
+
 
 //function below is getting the information data for the area that has been searched
     function placeDetails(data) {
         console.log(data);
         $("#map-loc").html("<img id='wikithumb' src=" + data.thumbnail.source +  ">");
         $("#map-loc").addClass("center");
-        // $("#map-loc").css({"border": "4px inset white"});
         $("#loc-text").html(data.extract_html + "<a href=" + data.content_urls.desktop + ">wikipedia link</a>");
         $("#loc-text").css({"background-color": "white", "opacity": "0.8", "padding": "5px", "display": "block"});
     }
@@ -220,6 +220,7 @@ $(document).ready(function () {
             success: weatherData
         });
     }
+
 
     function weatherData(data) {
         console.log(data)
@@ -244,11 +245,11 @@ $(document).ready(function () {
         var addressURL = "https://nominatim.openstreetmap.org/search?q=" + newAddressString + "&format=json&addressdetails=1"
         console.log(addressURL);
 
+
         $.ajax({
             url: addressURL,
             method: "GET",
             success: addressEntry,
-
         });
 
 
@@ -271,13 +272,15 @@ $(document).ready(function () {
                 accessToken: 'pk.eyJ1IjoibW9jaGFjb3NpbmUxMjA2IiwiYSI6ImNqcTJhbmE1czE2YTQzeXNianA4c3FrY2sifQ.RbdmQEMMo25L1OWZuOasLA'
             }).addTo(mymap);
             var marker = L.marker([lat, lng]).addTo(mymap);
-            $("#locText").html("Latitude: " + response[0].lat + " <br> Longitude: " + response[0].lon + " <br> Street Address: " + response[0].display_name);
 
+            $("#locText").html("Latitude: " + response[0].lat + " <br> Longitude: " + response[0].lon + " <br> Street Address: " + response[0].display_name);
             geoAddress();
             getZamatoCats();
             getZamato();
+          }
         }
-    }
+
+    function getZamato() {
 
 
     function getZamato() {
@@ -296,6 +299,10 @@ $(document).ready(function () {
             },
             success: zamatoRes,
         })
+
+        // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
+
+        // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
 
 
         function zamatoRes(data) {
@@ -345,6 +352,7 @@ $(document).ready(function () {
             var moreButton = $("<button>").addClass("yellow darken-2 waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
             $("#formList").append(moreButton);
 
+
             $("#moreResults").on("click", function () {
                 event.preventDefault();
                 $("#moreResults").remove();
@@ -361,8 +369,8 @@ $(document).ready(function () {
                 $("#moreResults").off("click");
             })
         }
-
     }
     cuisineSelectedOption();
     // establishmentSelectedOption();
 });
+

@@ -25,6 +25,12 @@ body::after{
    display: none;
 }
 
+#leftPane {
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 0;
+}
+
 #mapid {
     height: 300px; 
    }
