@@ -30,8 +30,29 @@ var selectedEstab;
 var currentTemp;
 var currentCondition;
 
+var modalOne = document.getElementById("modal1");
 
 $(document).ready(function () {
+
+    $("#signUp").on("click", function(event) {
+        event.preventDefault();
+        $("#modal1").show();
+    });
+
+    $("#cancelOne").on("click", function(){
+        $("#modal1").hide();
+    });
+
+    $("#logIn").on("click", function(event) {
+        event.preventDefault();
+        $("#modal2").show();
+    });
+
+    $("#cancelTwo").on("click", function(){
+        $("#modal2").hide();
+    });
+
+
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
 
@@ -107,7 +128,7 @@ $(document).ready(function () {
             success: zamatoCatFunc,
           })
         }
-      }
+      
 
 
     function zamatoCatFunc(data) {
@@ -280,7 +301,7 @@ $(document).ready(function () {
           }
         }
 
-    function getZamato() {
+    // function getZamato() {
 
 
     function getZamato() {
