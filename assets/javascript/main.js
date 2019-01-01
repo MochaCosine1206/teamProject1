@@ -130,10 +130,13 @@ $(document).ready(function () {
               alert(errorMessage);
             }
             console.log(error);
+            $("#signUp").show();
+            $("#logIn").show();
+    
             // [END_EXCLUDE]
           });
-          $("#nav-mobile").prepend("<li>" + "Welcome back! " + "</li>");
 
+          checkUser();
 
           // [END authwithemail]
         }
@@ -156,20 +159,19 @@ $(document).ready(function () {
               console.log(error);
               // [END_EXCLUDE]
             });
-            database.ref().on("child_added", function(childSnapshot) {
-                console.log(childSnapshot.val().userName);
-                console.log(childSnapshot.val().email);
-                console.log(childSnapshot.val().password);
-            
-        
-            $("#nav-mobile").prepend("<li>" + "Welcome, " + childSnapshot.val().userName + "</li>");
-        
-        });
-        
+        checkUser();
 
             // [END createwithemail]
     }
       
+    function checkUser() {
+        var user = firebase.auth().currentUser;
+        if (user != null) {
+            var name = user.userName;
+            $("#nav-mobile").prepend("<li>" + "Welcome, " + name + "</li>");
+
+        }
+    }
 
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
