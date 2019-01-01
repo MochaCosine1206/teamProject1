@@ -39,13 +39,14 @@ $(document).ready(function () {
 
     $("#signUp").on("click", function(event) {
         event.preventDefault();
-        $("#modal1").show();
+        $(modalOne).show();
+        $(modalOne).css("z-index", 100);
         $("#addressButton").hide();
         $("#locationButton").hide();
     });
 
     $("#cancelOne").on("click", function(){
-        $("#modal1").hide();
+        $(modalOne).hide();
         $("#addressButton").show();
         $("#locationButton").show();
     });
@@ -65,9 +66,9 @@ $(document).ready(function () {
         savedEmail = $("#emailSignUp").val().trim();
         savedPassword = $("#passwordSignUp").val().trim();
 
-        console.log(userName);
-        console.log(email);
-        console.log(password);
+        console.log(savedUserName);
+        console.log(savedEmail);
+        console.log(savedPassword);
 
         var newUser = {
             userName: savedUserName,
