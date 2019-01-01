@@ -34,6 +34,7 @@ var savedUserName = "";
 var savedEmail = "";
 var savedPassword = "";
 var modalOne = document.getElementById("modal1");
+var modalTwo = document.getElementById("modal2");
 
 $(document).ready(function () {
 
@@ -41,8 +42,8 @@ $(document).ready(function () {
         event.preventDefault();
         $(modalOne).show();
         $(modalOne).css("z-index", 100);
-        $("#addressButton").hide();
-        $("#locationButton").hide();
+        // $("#addressButton").hide();
+        // $("#locationButton").hide();
     });
 
     $("#cancelOne").on("click", function(){
@@ -53,11 +54,12 @@ $(document).ready(function () {
 
     $("#logIn").on("click", function(event) {
         event.preventDefault();
-        $("#modal2").show();
+        $(modalTwo).show();
+        $(modalTwo).css("z-index", 100);
     });
 
     $("#cancelTwo").on("click", function(){
-        $("#modal2").hide();
+        $(modalTwo).hide();
     });
 
     $("#submitOne").on("click", function(event) {
@@ -88,6 +90,21 @@ $(document).ready(function () {
         $("#emailSignUp").val("");
         $("#passwordSignUp").val("");
 
+        $(modalOne).hide();
+        $("#signUp").hide();
+        $("#logIn").hide();
+
+    });
+
+    $("#submitTwo").on("click", function(event) {
+        event.preventDefault();
+        logIn();
+
+        $(modalTwo).hide();
+        $("#signUp").hide();
+        $("#logIn").hide();
+
+
     });
 
     function logIn() {
@@ -99,6 +116,7 @@ $(document).ready(function () {
           var email = document.getElementById('emailLogIn').value;
           var password = document.getElementById('passwordLogIn').value;
         }
+        console.log(email);
         // Sign in with email and pass.
         // [START authwithemail]
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
@@ -114,8 +132,12 @@ $(document).ready(function () {
             console.log(error);
             // [END_EXCLUDE]
           });
+          $("#nav-mobile").prepend("<li>" + "Welcome back! " + "</li>");
+
+
           // [END authwithemail]
         }
+
     function handleSignUp() {
         // var email = document.getElementById('emailSignUp').value;
         // var password = document.getElementById('passwordSignUp').value;
@@ -134,10 +156,20 @@ $(document).ready(function () {
               console.log(error);
               // [END_EXCLUDE]
             });
+            database.ref().on("child_added", function(childSnapshot) {
+                console.log(childSnapshot.val().userName);
+                console.log(childSnapshot.val().email);
+                console.log(childSnapshot.val().password);
+            
+        
+            $("#nav-mobile").prepend("<li>" + "Welcome, " + childSnapshot.val().userName + "</li>");
+        
+        });
+        
+
             // [END createwithemail]
     }
       
-    
 
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
