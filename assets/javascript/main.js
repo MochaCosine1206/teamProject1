@@ -42,20 +42,18 @@ $(document).ready(function () {
         event.preventDefault();
         $(modalOne).show();
         $(modalOne).css("z-index", 100);
-        // $("#addressButton").hide();
-        // $("#locationButton").hide();
+        $(modalTwo).hide();
     });
 
     $("#cancelOne").on("click", function(){
         $(modalOne).hide();
-        $("#addressButton").show();
-        $("#locationButton").show();
     });
 
     $("#logIn").on("click", function(event) {
         event.preventDefault();
         $(modalTwo).show();
         $(modalTwo).css("z-index", 100);
+        $(modalOne).hide();
     });
 
     $("#cancelTwo").on("click", function(){
@@ -125,9 +123,11 @@ $(document).ready(function () {
             var errorMessage = error.message;
             // [START_EXCLUDE]
             if (errorCode === 'auth/wrong-password') {
-              alert('Wrong password.');
+              $(modalTwo).show();
+                $("#logInTitle").append("<p>" +'Wrong password.' + "</p>");
             } else {
-              alert(errorMessage);
+              $(modalTwo).show();
+                $("#logInTitle").append("<p>" + errorMessage + "</p>");
             }
             console.log(error);
             $("#signUp").show();
@@ -152,9 +152,11 @@ $(document).ready(function () {
             var errorMessage = error.message;
               // [START_EXCLUDE]
               if (errorCode == 'auth/weak-password') {
-                alert('The password is too weak.');
+                $(modalOne).show();  
+                $("#signUpTitle").append("<p>" + 'The password is too weak.' + "</p>");
               } else {
-                alert(errorMessage);
+                $(modalOne).show();  
+                $("#signUpTitle").append("<p>" + errorMessage + "</p>");
               }
               console.log(error);
               // [END_EXCLUDE]
@@ -163,7 +165,8 @@ $(document).ready(function () {
 
             // [END createwithemail]
     }
-      
+   
+    
     function checkUser() {
         var user = firebase.auth().currentUser;
         if (user != null) {
