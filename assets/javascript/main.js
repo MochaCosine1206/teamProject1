@@ -472,8 +472,8 @@ $(document).ready(function () {
                 zamatoDivCard.css({"opacity": "0.9"});
                 var zamatoDivCardContent = $("<div>").addClass("card-content white-text");
                 var zamatoDivCardText = $("<p>");
-                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" 
-                    + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
+                var zamatoSec = zamatoDivCardText.html("Name: " + data.restaurants[i].restaurant.name + "<br>" + "Address: " + data.restaurants[i].restaurant.location.address + "<br>" 
+                    + "Avg Rating: " + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + "Rating: " + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + "No. of Reviews: " + data.restaurants[i].restaurant.user_rating.votes);
 
                 var zamatoImgSpot = $("<div>").addClass("card-panel");
                 var zamatoImg = zamatoImgSpot.html(data.restaurants[i].restaurant.thumb);
