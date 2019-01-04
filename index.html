@@ -43,13 +43,13 @@
             <div class="nav-wrapper">
                 <div class="row center">
                     <h1 class='header orange-text'>Tasty Maps</h1>
-                        <a href="#" class="brand-logo">Logo</a>
+                        <!-- <a href="#" class="brand-logo">Logo</a> -->
                         <button data-target="modal1" class="yellow darken-2 waves-effect waves-light btn" id="signUp">Sign Up</button>
                         <button data-target="modal2" class="yellow darken-2 waves-effect waves-light btn" id="logIn">Login</button>
                           <ul id="nav-mobile" class="right hide-on-med-and-down">
-                            <li><a href="sass.html">Sass</a></li>
+                            <!-- <li><a href="sass.html">Sass</a></li>
                             <li><a href="badges.html">Components</a></li>
-                            <li><a href="collapsible.html">JavaScript</a></li>
+                            <li><a href="collapsible.html">JavaScript</a></li> -->
                           </ul>
                 </div> 
             </div>
@@ -110,22 +110,23 @@
 
         </div>
     </div>
-
+    <br>
+    <br>
     <div class="container center" id="apiInfo">
-        <div class="card-title">Geolocation, Cross Street</div>
+        <div class="card-title">Search by location or click locate to find current location</div>
           <form>
               <div class="form-group center" id="formList">
-                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
+                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="123 Main Street, Anytown, AZ">
               </div>
 
                 <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
-                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="large material-icons">add_location</i>
+                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Your Location <i class="large material-icons">add_location</i>
           </form>
     </div>
 
     <br>
 
-    <div class="container">
+    <div class="container" id="selCuisine">
         <div class="row center">
             <div class="col s12 m6">
                 <label><b>Select Cuisine</b></label>

@@ -38,6 +38,8 @@ var modalTwo = document.getElementById("modal2");
 
 $(document).ready(function () {
 
+    $("#selCuisine").hide();
+
     $("#signUp").on("click", function(event) {
         event.preventDefault();
         $(modalOne).show();
@@ -172,6 +174,7 @@ $(document).ready(function () {
         if (user != null) {
             var name = user.userName;
             $("#nav-mobile").prepend("<li>" + "Welcome, " + name + "</li>");
+            newUser.favorites = new Array();
 
         }
     }
@@ -255,6 +258,7 @@ $(document).ready(function () {
 
 
     function zamatoCatFunc(data) {
+        $("#selCuisine").show();
         console.log(data);
         for (var i = 0; i < data.cuisines.length; i++){
             console.log(data.cuisines[i].cuisine.cuisine_name);
@@ -473,8 +477,8 @@ $(document).ready(function () {
                 var zamatoDivCardContent = $("<div>").addClass("card-content white-text");
                 var zamatoDivCardText = $("<p>");
                 var zamatoSec = zamatoDivCardText.html("Name: " + data.restaurants[i].restaurant.name + "<br>" + "Address: " + data.restaurants[i].restaurant.location.address + "<br>" 
-                    + "Avg Rating: " + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + "Rating: " + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + "No. of Reviews: " + data.restaurants[i].restaurant.user_rating.votes);
-
+                    + "Avg Rating: " + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + "Rating: " + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + "No. of Reviews: " + data.restaurants[i].restaurant.user_rating.votes + "<br>");
+            
                 var zamatoImgSpot = $("<div>").addClass("card-panel");
                 var zamatoImg = zamatoImgSpot.html(data.restaurants[i].restaurant.thumb);
                 console.log(data.restaurants[i].restaurant.thumb);
@@ -516,5 +520,19 @@ $(document).ready(function () {
     }
     cuisineSelectedOption();
     // establishmentSelectedOption();
+
+    // $("#faveIcon").on("click", function(data) {
+        //save favorites by username, email, password when logged in
+        //generate error message "please sign in" when user === null
+        // if (firebase.auth().currentUser) {
+        //     console.log (firebase.auth().currentUser);
+            // newUser.favorites = new Array();
+        //     var faveName = data.restaurants[i].restaurant.name;
+        //     newUser.favorites = push(faveName);
+        // } else {
+        //     $("#faveIcon").append("<br>" + "Please sign in to save a favorite");
+        // }
+    //     console.log(faveName);
+    // });
 });
 
