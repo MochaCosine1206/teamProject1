@@ -31,8 +31,155 @@ var selectedEstab;
 var currentTemp;
 var currentCondition;
 
+var savedUserName = "";
+var savedEmail = "";
+var savedPassword = "";
+var modalOne = document.getElementById("modal1");
+var modalTwo = document.getElementById("modal2");
 
 $(document).ready(function () {
+
+    $("#selCuisine").hide();
+
+    $("#signUp").on("click", function(event) {
+        event.preventDefault();
+        $(modalOne).show();
+        $(modalOne).css("z-index", 100);
+        $(modalTwo).hide();
+    });
+
+    $("#cancelOne").on("click", function(){
+        $(modalOne).hide();
+    });
+
+    $("#logIn").on("click", function(event) {
+        event.preventDefault();
+        $(modalTwo).show();
+        $(modalTwo).css("z-index", 100);
+        $(modalOne).hide();
+    });
+
+    $("#cancelTwo").on("click", function(){
+        $(modalTwo).hide();
+    });
+
+    $("#submitOne").on("click", function(event) {
+        event.preventDefault();
+        savedUserName = $("#userNameSignUp").val().trim();
+        savedEmail = $("#emailSignUp").val().trim();
+        savedPassword = $("#passwordSignUp").val().trim();
+
+        console.log(savedUserName);
+        console.log(savedEmail);
+        console.log(savedPassword);
+
+        var newUser = {
+            userName: savedUserName,
+            email: savedEmail,
+            password: savedPassword
+        };
+
+        database.ref().push(newUser);
+
+        handleSignUp();
+
+        console.log(newUser.userName);
+        console.log(newUser.email);
+        console.log(newUser.password);
+
+        $("#userNameSignUp").val("");
+        $("#emailSignUp").val("");
+        $("#passwordSignUp").val("");
+
+        $(modalOne).hide();
+        $("#signUp").hide();
+        $("#logIn").hide();
+
+    });
+
+    $("#submitTwo").on("click", function(event) {
+        event.preventDefault();
+        logIn();
+
+        $(modalTwo).hide();
+        $("#signUp").hide();
+        $("#logIn").hide();
+
+
+    });
+
+    function logIn() {
+        if (firebase.auth().currentUser) {
+          // [START signout]
+          firebase.auth().signOut();
+          // [END signout]
+        } else {
+          var email = document.getElementById('emailLogIn').value;
+          var password = document.getElementById('passwordLogIn').value;
+        }
+        console.log(email);
+        // Sign in with email and pass.
+        // [START authwithemail]
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // [START_EXCLUDE]
+            if (errorCode === 'auth/wrong-password') {
+              $(modalTwo).show();
+                $("#logInTitle").append("<p>" +'Wrong password.' + "</p>");
+            } else {
+              $(modalTwo).show();
+                $("#logInTitle").append("<p>" + errorMessage + "</p>");
+            }
+            console.log(error);
+            $("#signUp").show();
+            $("#logIn").show();
+    
+            // [END_EXCLUDE]
+          });
+
+          checkUser();
+
+          // [END authwithemail]
+        }
+
+    function handleSignUp() {
+        // var email = document.getElementById('emailSignUp').value;
+        // var password = document.getElementById('passwordSignUp').value;
+            // Sign in with email and pass.
+            // [START createwithemail]
+        firebase.auth().createUserWithEmailAndPassword(savedEmail, savedPassword).catch(function(error) {
+              // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+              // [START_EXCLUDE]
+              if (errorCode == 'auth/weak-password') {
+                $(modalOne).show();  
+                $("#signUpTitle").append("<p>" + 'The password is too weak.' + "</p>");
+              } else {
+                $(modalOne).show();  
+                $("#signUpTitle").append("<p>" + errorMessage + "</p>");
+              }
+              console.log(error);
+              // [END_EXCLUDE]
+            });
+        checkUser();
+
+            // [END createwithemail]
+    }
+   
+    
+    function checkUser() {
+        var user = firebase.auth().currentUser;
+        if (user != null) {
+            var name = user.userName;
+            $("#nav-mobile").prepend("<li>" + "Welcome, " + name + "</li>");
+            newUser.favorites = new Array();
+
+        }
+    }
+
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
 
@@ -114,6 +261,7 @@ $(document).ready(function () {
 
 
     function zamatoCatFunc(data) {
+        $("#selCuisine").show();
         console.log(data);
         for (var i = 0; i < data.cuisines.length; i++){
             console.log(data.cuisines[i].cuisine.cuisine_name);
@@ -299,6 +447,7 @@ $(document).ready(function () {
         }
 
 
+
     function getZamato() {
         if(selectedCuisine) {
             var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc&cuisines=" + selectedCuisine;
@@ -343,9 +492,9 @@ $(document).ready(function () {
                 zamatoDivCard.css({"opacity": "0.9"});
                 var zamatoDivCardContent = $("<div>").addClass("card-content white-text");
                 var zamatoDivCardText = $("<p>");
-                var zamatoSec = zamatoDivCardText.html(data.restaurants[i].restaurant.name + "<br>" + data.restaurants[i].restaurant.location.address + "<br>" 
-                    + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + data.restaurants[i].restaurant.user_rating.votes);
-
+                var zamatoSec = zamatoDivCardText.html("Name: " + data.restaurants[i].restaurant.name + "<br>" + "Address: " + data.restaurants[i].restaurant.location.address + "<br>" 
+                    + "Avg Rating: " + data.restaurants[i].restaurant.user_rating.aggregate_rating + "<br>" + "Rating: " + data.restaurants[i].restaurant.user_rating.rating_text + "<br>" + "No. of Reviews: " + data.restaurants[i].restaurant.user_rating.votes + "<br>");
+            
                 var zamatoImgSpot = $("<div>").addClass("card-panel");
                 var zamatoImg = zamatoImgSpot.html(data.restaurants[i].restaurant.thumb);
                 console.log(data.restaurants[i].restaurant.thumb);
@@ -365,7 +514,7 @@ $(document).ready(function () {
 
         function moreRestaurants() {
             var moreButton = $("<button>").addClass("yellow darken-2 waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
-            $("#formList").append(moreButton);
+            $("#zamatoDiv").prepend(moreButton);
 
 
             $("#moreResults").on("click", function () {
@@ -387,5 +536,19 @@ $(document).ready(function () {
     }
     cuisineSelectedOption();
     // establishmentSelectedOption();
+
+    // $("#faveIcon").on("click", function(data) {
+        //save favorites by username, email, password when logged in
+        //generate error message "please sign in" when user === null
+        // if (firebase.auth().currentUser) {
+        //     console.log (firebase.auth().currentUser);
+            // newUser.favorites = new Array();
+        //     var faveName = data.restaurants[i].restaurant.name;
+        //     newUser.favorites = push(faveName);
+        // } else {
+        //     $("#faveIcon").append("<br>" + "Please sign in to save a favorite");
+        // }
+    //     console.log(faveName);
+    // });
 });
 
