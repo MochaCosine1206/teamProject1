@@ -498,7 +498,7 @@ $(document).ready(function () {
 
         function moreRestaurants() {
             var moreButton = $("<button>").addClass("yellow darken-2 waves-effect waves-light btn").attr("id", "moreResults").text("next 10");
-            $("#formList").append(moreButton);
+            $("#zamatoDiv").prepend(moreButton);
 
 
             $("#moreResults").on("click", function () {
