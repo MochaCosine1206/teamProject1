@@ -36,10 +36,13 @@ var savedEmail = "";
 var savedPassword = "";
 var modalOne = document.getElementById("modal1");
 var modalTwo = document.getElementById("modal2");
+var newUser = {};
 
 $(document).ready(function () {
 
     $("#selCuisine").hide();
+    $("#apiInfo").hide();
+    $("#logOut").hide();
 
     $("#signUp").on("click", function(event) {
         event.preventDefault();
@@ -63,6 +66,7 @@ $(document).ready(function () {
         $(modalTwo).hide();
     });
 
+    //Sign Up to the app
     $("#submitOne").on("click", function(event) {
         event.preventDefault();
         savedUserName = $("#userNameSignUp").val().trim();
@@ -73,19 +77,21 @@ $(document).ready(function () {
         console.log(savedEmail);
         console.log(savedPassword);
 
-        var newUser = {
-            userName: savedUserName,
-            email: savedEmail,
-            password: savedPassword
-        };
-
-        database.ref().push(newUser);
-
-        handleSignUp();
-
-        console.log(newUser.userName);
-        console.log(newUser.email);
-        console.log(newUser.password);
+        firebase.auth().createUserWithEmailAndPassword(savedEmail, savedPassword).catch(function(error) {
+            // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+            // [START_EXCLUDE]
+            if (errorCode == 'auth/weak-password') {
+              $(modalOne).show();  
+              $("#signUpTitle").append("<p>" + 'The password is too weak.' + "</p>");
+            } else {
+              $(modalOne).show();  
+              $("#signUpTitle").append("<p>" + errorMessage + "</p>");
+            }
+            console.log(error);
+            // [END_EXCLUDE]
+          });
 
         $("#userNameSignUp").val("");
         $("#emailSignUp").val("");
@@ -94,91 +100,115 @@ $(document).ready(function () {
         $(modalOne).hide();
         $("#signUp").hide();
         $("#logIn").hide();
+        $("#nav-mobile").append("<li>" + "Welcome, " + savedUserName + "</li>");
+        $("#apiInfo").show();
+        $("#logOut").show();
+      
 
     });
+
+// var user = firebase.auth().currentUser;
+// var name = ""; 
+// var email = ""; 
+// var password = "";
+// var uid = ""; 
+// var emailVerified = "";
+
+// if (user != null) {
+//   name = user.userName;
+//   email = user.email;
+//   password = user.password;
+//   emailVerified = user.emailVerified;
+//   uid = user.uid; 
+
+//   $("#nav-mobile").append("<li>" + "Welcome, " + name + "</li>");
+//   $("#apiInfo").show();
+// }
 
     $("#submitTwo").on("click", function(event) {
         event.preventDefault();
-        logIn();
 
-        $(modalTwo).hide();
-        $("#signUp").hide();
-        $("#logIn").hide();
+        if (firebase.auth().currentUser) {
+            // [START signout]
+            firebase.auth().signOut();
+            // [END signout]
+          } else {
+            var email = $("#emailLogIn").val().trim();
+            var password = $("#passwordLogIn").val().trim();
+          }
+          console.log(email);
+          console.log(password);
+          // Sign in with email and pass.
+          // [START authwithemail]
+          firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // [START_EXCLUDE]
+              if (errorCode === 'auth/wrong-password') {
+                $(modalTwo).show();
+                  $("#logInTitle").append("<p>" +'Wrong password.' + "</p>");
+              } else {
+                $(modalTwo).show();
+                  $("#logInTitle").append("<p>" + errorMessage + "</p>");
+              }
+              console.log(error);
+              $("#signUp").show();
+              $("#logIn").show();
+      
+              // [END_EXCLUDE]
+            });
+
+            $(modalTwo).hide();
+            $("#signUp").hide();
+            $("#logIn").hide();
+            $("#apiInfo").show();
+            $("#logOut").show();
 
 
     });
 
-    function logIn() {
-        if (firebase.auth().currentUser) {
-          // [START signout]
-          firebase.auth().signOut();
-          // [END signout]
-        } else {
-          var email = document.getElementById('emailLogIn').value;
-          var password = document.getElementById('passwordLogIn').value;
-        }
-        console.log(email);
-        // Sign in with email and pass.
-        // [START authwithemail]
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-            // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            // [START_EXCLUDE]
-            if (errorCode === 'auth/wrong-password') {
-              $(modalTwo).show();
-                $("#logInTitle").append("<p>" +'Wrong password.' + "</p>");
-            } else {
-              $(modalTwo).show();
-                $("#logInTitle").append("<p>" + errorMessage + "</p>");
-            }
-            console.log(error);
-            $("#signUp").show();
-            $("#logIn").show();
+   $("#logOut").on("click", function() {
+    firebase.auth().signOut().then(function() {
+        $("#signUp").show();
+        $("#logIn").show();
+        $("#apiInfo").hide();
+        $("#logOut").hide();
+
+        console.log("Logged out!")
+     }, function(error) {
+        console.log(error.code);
+        console.log(error.message);
+     });
+   });
     
-            // [END_EXCLUDE]
-          });
+    // function checkUser() {
+    //     var user = firebase.auth().currentUser;
+    //     if (user != null) {
+    //         var name = user.userName;
+    //         $("#nav-mobile").prepend("<li>" + "Welcome, " + name + "</li>");
+    //         newUser.favorites = new Array();
 
-          checkUser();
+    //     }
+    // }
 
-          // [END authwithemail]
-        }
+//     var user = firebase.auth().currentUser;
+// var name = ""; 
+// var email = ""; 
+// var password = "";
+// var uid = ""; 
+// var emailVerified = "";
 
-    function handleSignUp() {
-        // var email = document.getElementById('emailSignUp').value;
-        // var password = document.getElementById('passwordSignUp').value;
-            // Sign in with email and pass.
-            // [START createwithemail]
-        firebase.auth().createUserWithEmailAndPassword(savedEmail, savedPassword).catch(function(error) {
-              // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-              // [START_EXCLUDE]
-              if (errorCode == 'auth/weak-password') {
-                $(modalOne).show();  
-                $("#signUpTitle").append("<p>" + 'The password is too weak.' + "</p>");
-              } else {
-                $(modalOne).show();  
-                $("#signUpTitle").append("<p>" + errorMessage + "</p>");
-              }
-              console.log(error);
-              // [END_EXCLUDE]
-            });
-        checkUser();
+// if (user != null) {
+//   name = user.userName;
+//   email = user.email;
+//   password = user.password;
+//   emailVerified = user.emailVerified;
+//   uid = user.uid; 
 
-            // [END createwithemail]
-    }
-   
-    
-    function checkUser() {
-        var user = firebase.auth().currentUser;
-        if (user != null) {
-            var name = user.userName;
-            $("#nav-mobile").prepend("<li>" + "Welcome, " + name + "</li>");
-            newUser.favorites = new Array();
-
-        }
-    }
+//   $("#nav-mobile").append("<li>" + "Welcome, " + name + "</li>");
+//   $("#apiInfo").show();
+// }
 
     $("#addressButton").on("click", function (event) {
         event.preventDefault();
@@ -551,4 +581,3 @@ $(document).ready(function () {
     //     console.log(faveName);
     // });
 });
-
