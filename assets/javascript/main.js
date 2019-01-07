@@ -12,6 +12,7 @@ var database = firebase.database();
 var latlon;
 var city;
 var hamlet;
+var town;
 var county;
 var residential;
 var state;
@@ -228,6 +229,8 @@ $(document).ready(function () {
         }
         $("#moreResults").remove();
         $("#cuisineSel").val("");
+        selectedCuisine = "";
+        resultsCount = 0;
     }
 
 
@@ -333,21 +336,21 @@ $(document).ready(function () {
         console.log(country);
         state = data.address.state;
         console.log(state);
-        residential = data.address.residential;
-        console.log(residential);
         county = data.address.county;
         console.log(county);
-        town = data.address.town;
-        console.log(town);
+        residential = data.address.residential;
+        console.log(residential);
         hamlet = data.address.hamlet;
         console.log(hamlet);
+        town = data.address.town;
+        console.log(town);
         city = data.address.city;
         console.log(city);
-        if (city === undefined && hamlet === undefined && county === undefined) {
-            formattedCityStateName = residential + ",_" + state;
+        if (city === undefined && hamlet === undefined && town === undefined) {
+            formattedCityStateName = county + ",_" + state;
             console.log(formattedCityStateName);
         } else if (city === undefined && hamlet === undefined) {
-            formattedCityStateName = county + ",_" + state;
+            formattedCityStateName = town + ",_" + state;
             console.log(formattedCityStateName);
         } else if (city === undefined) {
             formattedCityStateName = hamlet + ",_" + state;
@@ -356,6 +359,20 @@ $(document).ready(function () {
             formattedCityStateName = city + ",_" + state;
             console.log(formattedCityStateName);
         }
+
+        // if (city === undefined) {
+        //     formattedCityStateName = town + ",_" + state;
+        // } else if (town === undefined){
+        //     formattedCityStateName = hamlet + ",_" + state;
+        // } else if (hamlet === undefined) {
+        //     formattedCityStateName = residential + ",_" + state;
+        // } else if (residential === undefined){
+        //     formattedCityStateName = county + ",_" + state;
+        // } else if (county === undefined) {
+        //     formattedCityStateName = state;
+        // } else {
+        //     formattedCityStateName = city + ",_" + state;
+        // }
 
         console.log(formattedCityStateName);
 
@@ -382,6 +399,7 @@ $(document).ready(function () {
         $("#map-loc").addClass("center");
         $("#loc-text").html(data.extract_html + "<a href=" + data.content_urls.desktop + ">wikipedia link</a>");
         $("#loc-text").css({"background-color": "white", "opacity": "0.8", "padding": "5px", "display": "block"});
+
     }
 
 
@@ -453,7 +471,6 @@ $(document).ready(function () {
           }
         }
 
-    // function getZamato() {
 
 
     function getZamato() {
@@ -462,6 +479,8 @@ $(document).ready(function () {
             console.log(zamatoURL);
         } else {
             var zamatoURL = "https://developers.zomato.com/api/v2.1/search?start=" + resultsCount + "&count=10&lat=" + lat + "&lon=" + lng + "&radius=8047&sort=rating&order=desc";
+            console.log(zamatoURL);
+            console.log(selectedCuisine);   
         }
         
         $.ajax({
@@ -473,9 +492,6 @@ $(document).ready(function () {
             success: zamatoRes,
         })
 
-        // https://developers.zomato.com/api/v2.1/geocode?lat=" + lat + "&lon=" + lng
-
-        // https://developers.zomato.com/api/v2.1/search?count=10&lat=33.4196675&lon=-111.9157036&radius=8047&sort=rating&order=desc
 
 
         function zamatoRes(data) {
