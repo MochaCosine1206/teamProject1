@@ -122,13 +122,13 @@ $(document).ready(function () {
         $("#signUp").hide();
         $("#logIn").hide();
         
-        var user = firebase.auth().currentUser;
+        // var user = firebase.auth().currentUser;
 
-            if (user) {
-                $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
+        //     if (user) {
+        //         $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
 
-            } else {
-            }
+        //     } else {
+        //     }
           
 
         // }else{
@@ -185,13 +185,13 @@ $(document).ready(function () {
               $("#signUp").show();
               $("#logIn").show();
       
-              var user = firebase.auth().currentUser;
+            //   var user = firebase.auth().currentUser;
 
-              if (user) {
-                  $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
+            //   if (user) {
+            //       $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
   
-              } else {
-              }
+            //   } else {
+            //   }
                 });
 
             
