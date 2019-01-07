@@ -8,7 +8,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var database = firebase.database();
+// var database = firebase.database();
 var latlon;
 var city;
 var hamlet;
@@ -123,13 +123,13 @@ $(document).ready(function () {
         $("#signUp").hide();
         $("#logIn").hide();
         
-        // var user = firebase.auth().currentUser;
+        var user = firebase.auth().currentUser;
 
-        //     if (user) {
-        //         $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
+            // if (user) {
+            //     $("#nav-mobile").append("<li>" + "Welcome!" + "</li>");
 
-        //     } else {
-        //     }
+            // } else {
+            // }
           
 
         // }else{
