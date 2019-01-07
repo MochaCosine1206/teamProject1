@@ -43,33 +43,92 @@
             <div class="nav-wrapper">
                 <div class="row center">
                     <h1 class='header orange-text'>Tasty Maps</h1>
-                        <a href="#" class="brand-logo">Logo</a>
+                        <!-- <a href="#" class="brand-logo">Logo</a> -->
+                        <button data-target="modal1" class="yellow darken-2 waves-effect waves-light btn" id="signUp">Sign Up</button>
+                        <button data-target="modal2" class="yellow darken-2 waves-effect waves-light btn" id="logIn">Login</button>
                           <ul id="nav-mobile" class="right hide-on-med-and-down">
-                            <li><a href="sass.html">Sass</a></li>
+                                <button class="yellow darken-2 waves-effect waves-light btn" id="logOut">Log Out</button>
+  
+                            <!-- <li><a href="sass.html">Sass</a></li>
                             <li><a href="badges.html">Components</a></li>
-                            <li><a href="collapsible.html">JavaScript</a></li>
+                            <li><a href="collapsible.html">JavaScript</a></li> --> 
                           </ul>
                 </div> 
             </div>
         </div>
     </header>
 
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4 id="signUpTitle">Sign Up</h4>
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="userNameSignUp" type="text" class="validate">
+                        <label for="userNameSignUp">User Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="emailSignUp" type="text" class="validate">
+                        <label for="emailSignUp">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="passwordSignUp" type="" class="validate">
+                        <label for="passwordSignUp">Password</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="submitOne">Submit</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="cancelOne">Cancel</a>
+        </div>
+    </div>
 
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h4 id="logInTitle">Log In</h4>
+            <form class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="emailLogIn" type="email" class="validate">
+                    <label for="emailLogIn">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="passwordLogIn" type="password" class="validate">
+                    <label for="passwordLogIn">Password</label>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="submitTwo">Submit</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="cancelTwo">Cancel</a>
+
+        </div>
+    </div>
+    <br>
+    <br>
     <div class="container center" id="apiInfo">
-        <div class="card-title">Geolocation, Cross Street</div>
+        <div class="card-title">Search by location or click locate to find current location</div>
           <form>
               <div class="form-group center" id="formList">
-                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
+                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="123 Main Street, Anytown, AZ">
               </div>
 
                 <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
-                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="large material-icons">add_location</i>
+                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Your Location <i class="large material-icons">add_location</i>
           </form>
     </div>
 
     <br>
 
-    <div class="container">
+    <div class="container" id="selCuisine">
         <div class="row center">
             <div class="col s12 m6">
                 <label><b>Select Cuisine</b></label>
@@ -93,7 +152,7 @@
               </div>
             </div>
 
-            <div class="col s6">
+            <div class="col s6" id="zamatoDiv">
                 <div class="card-text" id="zamato" style="width: 500px; height: 690px; overflow: auto">
                 </div>
             </div>
@@ -102,6 +161,7 @@
     </div>
 
     <script src="assets/javascript/main.js"></script>
+
 
     </body>
     </html>
