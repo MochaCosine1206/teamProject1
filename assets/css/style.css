@@ -1,0 +1,165 @@
+body {
+    background-image: url(https://static.vecteezy.com/system/resources/previews/000/087/593/original/free-outdoor-cafes-vector.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 90%;
+    min-height: 100vh;
+    margin: 0;
+   padding: 0;
+}
+
+body::after{
+    opacity: 0.5;
+}
+
+.header.orange-text{
+    font-family: 'Lobster', cursive;
+}
+
+
+::-webkit-input-placeholder {
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+   }
+
+#resultsBox {
+   display: none;
+}
+
+#leftPane {
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 0;
+}
+
+#mapid {
+    height: 300px; 
+   }
+
+#moreResults {
+   position: relative;
+   float: right;
+} 
+
+::-webkit-scrollbar {
+    width: 15px;
+  }
+
+::-webkit-scrollbar-track {
+box-shadow: inset 0 0 5px grey; 
+border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: orange; 
+    border-radius: 5px;
+  }
+
+#map-loc {
+    margin: 4px;
+    
+}
+
+#addressButton{
+    text-align: center;
+    font-size: 12px;
+    width: 200px;
+}
+
+#locationButton{
+    text-align: center;
+    font-size: 12px;
+    width:250px;
+}
+
+#zamato {
+    width: 500px; 
+    height: 690px; 
+    overflow: auto;
+margin-top: -75px;
+}
+
+#cloud {
+    text-align: center;
+  
+    /* Same trick as previsouly used to make circles */
+    box-sizing: border-box;
+    width     : 150px;
+    height    : 150px;
+    padding   : 80px 1em 0 1em;
+  
+    /* We make room for the "ears" of our cloud */
+    margin    : 0 100px;
+  
+    position: relative;
+  
+    background-color: rgb(252, 252, 252);
+  
+    /* Well, actually we are not making a full circle
+       as we want the bottom of our cloud to be flat.
+       Feel free to tweak this example to make a cloud
+       that isn't flat at the bottom ;) */
+    border-radius: 100% 100% 0 0;
+  }
+  
+  /* Those are common style that apply to both our ::before
+     and ::after pseudo elements. */
+  #cloud::before,
+  #cloud::after {
+    /* This is required to be allowed to display the
+       pseudo-elements, event if the value is an empty
+       string */
+    content: '';
+  
+    /* We positionnate our pseudo-elements on the left and
+       right sides of the box, but always at the bottom */
+    position: absolute;
+    bottom  : 0;
+  
+    /* This makes sure our pseudo-elements will be below
+       the box content whatever happens. */
+    z-index : -1;
+  
+    background-color: rgb(244, 249, 250);
+    border-radius: 100%;
+  }
+  
+  #cloud::before {
+    /* This is the  size of the clouds left ear */
+    width  : 125px;
+    height : 125px;
+  
+    /* We sligthly move it to the left */
+    left    : -80px;
+  
+    /* To make sure that the bottom of the cloud
+       remains flat, we must make the bottom right
+       corner of the left ear square. */
+    border-bottom-right-radius: 0;
+  }
+  
+  #cloud::after {
+    /* This is the size of the clouds left ear */
+    width  : 100px;
+    height : 100px;
+  right   : -60px;
+    border-bottom-left-radius: 0;
+  }
+
+
+
+@media screen and (max-width: 736px) {
+    #zamato {
+        width: 300px; 
+        height: 300px; 
+        overflow: auto;
+        } 
+
+ }
+
+
+
