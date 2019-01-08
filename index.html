@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE <!DOCTYPE html>
 <html>
 
 <head>
@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
     <!-- Materialize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -30,9 +33,7 @@
     <!--fontawesome-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
         crossorigin="anonymous">
-    <!--Google Font-->
-    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-        <!-- materialize icons -->
+    <!-- materialize icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Our styles and script -->
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />  
@@ -45,28 +46,90 @@
             <div class="nav-wrapper">
                 <div class="row center">
                     <h1 class='header orange-text'>Tasty Maps</h1>
-                    <div id="cloud"></div>
+                        <div id = "cloud"></div>
+                        <button data-target="modal1" class="yellow darken-2 waves-effect waves-light btn" id="signUp">Sign Up</button>
+                        <button data-target="modal2" class="yellow darken-2 waves-effect waves-light btn" id="logIn">Login</button>
+                          <ul id="nav-mobile" class="right hide-on-med-and-down">
+                                <button class="yellow darken-2 waves-effect waves-light btn" id="logOut">Log Out</button>
+  
+                           
+                          </ul>
                 </div> 
             </div>
         </div>
     </header>
 
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4 id="signUpTitle">Sign Up</h4>
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="userNameSignUp" type="text" class="validate">
+                        <label for="userNameSignUp">User Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="emailSignUp" type="text" class="validate">
+                        <label for="emailSignUp">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="passwordSignUp" type="" class="validate">
+                        <label for="passwordSignUp">Password</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="submitOne">Submit</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="cancelOne">Cancel</a>
+        </div>
+    </div>
 
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h4 id="logInTitle">Log In</h4>
+            <form class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="emailLogIn" type="email" class="validate">
+                    <label for="emailLogIn">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="passwordLogIn" type="password" class="validate">
+                    <label for="passwordLogIn">Password</label>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="submitTwo">Submit</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="cancelTwo">Cancel</a>
+
+        </div>
+    </div>
+    <br>
+    <br>
     <div class="container center" id="apiInfo">
-        <div class="card-title"></div>
+        <div class="card-title">Search by location or click locate to find current location</div>
           <form>
               <div class="form-group center" id="formList">
-                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="Search by location or click locate to find current location">
+                <input type="search" class="form-control center" id="locationSearch" aria-describedby="searchHelp" placeholder="123 Main Street, Anytown, AZ">
               </div>
 
                 <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="addressButton">Submit</button>
-                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Get Location <i class="large material-icons">add_location</i>
+                <button type="submit" class="yellow darken-2 waves-effect waves-light btn" id="locationButton">Your Location <i class="large material-icons">add_location</i>
           </form>
     </div>
 
     <br>
 
-    <div class="container">
+    <div class="container" id="selCuisine">
         <div class="row center">
             <div class="col s12 m6">
                 <label><b>Select Cuisine</b></label>
@@ -98,10 +161,9 @@
         </div>
     </div>
 
-
-    
-
     <script src="assets/javascript/main.js"></script>
+
 
     </body>
     </html>
+
