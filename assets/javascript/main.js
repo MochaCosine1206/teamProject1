@@ -474,7 +474,7 @@ $(document).ready(function () {
         var tempData = $("<p>").addClass("card-title center").attr("id", "weatherDat")
             .text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition)
             .css({"color": "orange", "font-size": "12px"});
-        $("#cloud").append(tempData);
+        $("#cloud").prepend(tempData);
     }
 
 
