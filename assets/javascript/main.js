@@ -473,8 +473,10 @@ $(document).ready(function () {
         console.log(currentCondition);
         var tempData = $("<p>").addClass("card-title center").attr("id", "weatherDat")
             .text("Current Temp: " + currentTemp + " Current Conditions: " + currentCondition)
+
             .css({"color": "orange", "font-size": "12px"});
         $("#cloud").prepend(tempData);
+
     }
 
 
@@ -632,4 +634,6 @@ $(document).ready(function () {
 
 // });
 
+
 });
+
