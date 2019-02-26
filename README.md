@@ -10,7 +10,7 @@ In this project we were tasked with the following objectives:
  
  **Meet Tasty Maps**
  
- ![](https://mochacosine1206.github.io/sp-portfolio1/assets/images/teamProjBefore.gif)
+![teamprojbefore](https://user-images.githubusercontent.com/41648281/53414571-478ae380-398c-11e9-8821-569c0ce58dc3.gif)
  
  Tasty Maps is your tool for survival.
  
